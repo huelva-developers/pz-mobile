@@ -1,20 +1,86 @@
 package com.huelvadevelopers.proyectozero
 
-/**
- * Created by DrAP on 24/04/2017.
- */
-
-import android.app.Activity
 import android.os.Bundle
-import android.widget.TextView
-import kotlinx.android.synthetic.main.main_activity.*
+import android.support.design.widget.Snackbar
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.app_bar_main.*
 
-public class MainActivity: Activity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
-        setContentView(R.layout.main_activity)
-        myMessage.setText("Hello Proyecto Zero")
+        fab!!.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
 
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout?
+        val toggle = ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer!!.setDrawerListener(toggle)
+        toggle.syncState()
+
+        val navigationView = findViewById(R.id.nav_view) as NavigationView?
+        navigationView!!.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onBackPressed() {
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout?
+        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        val id = item.itemId
+
+
+        if (id == R.id.action_settings) {
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        val id = item.itemId
+
+        val projectAbbreviation = resources.getString(R.string.project_abbreviation)
+        if (id == R.id.nav_dashboard) {
+            toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_dashboard)
+            // Handle the camera action
+        } else if (id == R.id.nav_transactions) {
+            toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_transactions)
+        } else if (id == R.id.nav_accounts) {
+            toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_accounts)
+        } else if (id == R.id.nav_tags) {
+            toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_tag)
+        } else if (id == R.id.nav_profile) {
+            toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_profile)
+        }
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout?
+        drawer!!.closeDrawer(GravityCompat.START)
+        return true
     }
 }

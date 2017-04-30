@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Proyecto Zero</string>
+    <string name="action_settings">Opciones</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_accounts">Mis cuentas</string>
+    <string name="menu_transactions">Movimientos</string>
+    <string name="project_abbreviation"></string>
+    <string name="menu_tag">Categorías</string>
+</resources>
