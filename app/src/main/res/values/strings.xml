@@ -12,4 +12,12 @@
     <string name="menu_transactions">Transactions</string>
     <string name="project_abbreviation" translatable="false">PZ</string>
     <string name="menu_tag">Tags</string>
+
+    //TreeView Sample
+    <string name="ic_keyboard_arrow_right">&#xe0c7;</string>
+    <string name="ic_email">&#xe087;</string>
+    <string name="ic_close">&#xe048;</string>
+    <string name="ic_add">&#xe006;</string>
+    <string name="ic_folder">&#xe09d;</string>
+    <string name="ic_keyboard_arrow_down">&#xe0c5;</string>
 </resources>

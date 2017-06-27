@@ -30,6 +30,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support.constraint:constraint-layout:+'
+
+    //TreeView
+    compile 'com.github.bmelnychuk:atv:1.2.+'
+    //PrintView
+    compile 'com.github.johnkil.print:print:1.2.2'
+
     testCompile 'junit:junit:4.12'
 }
 repositories {

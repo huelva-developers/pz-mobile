@@ -8,10 +8,18 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.*
 import android.widget.*
 import com.huelvadevelopers.proyectozero.model.Category
+import com.unnamed.b.atv.model.TreeNode
 import kotlinx.android.synthetic.main.app_bar_main.*
+import com.unnamed.b.atv.view.AndroidTreeView
+import kotlinx.android.synthetic.main.tags_fragment.*
+import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.tags_fragment.view.*
+import com.huelvadevelopers.proyectozero.TreeViewHolder.IconTreeItem
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -123,6 +131,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 rootView = inflater!!.inflate(R.layout.accounts_fragment, container, false)
             } else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 3) {
                 rootView = inflater!!.inflate(R.layout.tags_fragment, container, false)
+                var v = (activity as MainActivity).databaseManager.getCategories()
+                val root = TreeNode.root().setViewHolder(TreeViewHolder(activity))
+
+                for(category : Category in v){
+                    val node = TreeNode(IconTreeItem(android.R.drawable.ic_input_get, category.name))
+                    if(category.parent != null)
+                        for(n : TreeNode in root.children) {
+                            if ((n.value as IconTreeItem).text.equals(category.parent?.name)) {
+                                n.addChild(node)
+                                break
+                            }
+                        }
+                    else
+                        root.addChild(node)
+                }
+
+                val tView = AndroidTreeView(activity, root)
+                tView.setDefaultViewHolder(TreeViewHolder::class.java)
+                rootView.layoutTag.addView(tView.view)
+
+                tView.expandAll()
+
+                //Quitamos la flechita a los nodos de la raiz sin hijos
+                for(n : TreeNode in root.children) {
+                    if (n.children.size == 0)
+                        n.viewHolder.view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
+                }
+
             } else {
                 rootView = inflater!!.inflate(R.layout.profile_fragment, container, false)
             }
