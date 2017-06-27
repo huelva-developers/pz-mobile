@@ -10,15 +10,19 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.widget.*
+import com.huelvadevelopers.proyectozero.model.Category
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mFrameLayout : FrameLayout
+    lateinit var databaseManager : DataBaseManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        databaseManager = DataBaseManager(this)
 
         val projectAbbreviation = resources.getString(R.string.project_abbreviation)
         toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_dashboard)
@@ -53,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun goSection(section: Int) {
-        supportFragmentManager.beginTransaction().replace(R.id.container,PlaceholderFragment.newInstance(section)).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(section)).commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
