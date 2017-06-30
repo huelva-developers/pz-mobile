@@ -11,7 +11,13 @@ class DbHelper(context: Context)
     : SQLiteOpenHelper(context, DbHelper.DB_NAME, null, DbHelper.DB_SHEME_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-
+        db.execSQL("CREATE TABLE category ("+
+                "id INTEGER PRIMARY KEY  AUTOINCREMENT, "+
+                "parent_id INT, "+
+                "name VARCHAR NOT NULL, "+
+                "icon INT NOT NULL, "+
+                "type INT NOT NULL, "+
+                "FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE CASCADE)")
     }
 
 

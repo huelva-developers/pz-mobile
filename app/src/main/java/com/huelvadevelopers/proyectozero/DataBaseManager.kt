@@ -54,4 +54,27 @@ class DataBaseManager(context: Context) {
         }
         return v
     }
+
+    fun removeCategory( category : Category) {
+        var query = "delete from category where id = "+category.id
+        Log.v("Categoria borrada", category.toString())
+        db!!.execSQL(query)
+    }
+
+    fun addCategory( category : Category) {
+        val cv = ContentValues()
+        if(category.parent!=null)
+            cv.put("parent_id", category.parent?.id)
+        cv.put("name", category.name)
+        cv.put("icon", category.icon)
+        cv.put("type", category.type)
+
+        db!!.insert("category",null,cv)
+        Log.v("Categoria insertada", category.toString())
+    }
+
+    fun changeCategoryParent( parentId : Int, childrenId : Int){
+        val query = "update category set parent_id = $parentId where id = $childrenId"
+        db!!.execSQL(query)
+    }
 }

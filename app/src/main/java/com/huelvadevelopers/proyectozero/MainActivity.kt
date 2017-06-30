@@ -1,5 +1,8 @@
 package com.huelvadevelopers.proyectozero
 
+import android.app.AlertDialog
+import android.app.DialogFragment
+import android.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -18,7 +21,11 @@ import com.unnamed.b.atv.view.AndroidTreeView
 import kotlinx.android.synthetic.main.tags_fragment.*
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.tags_fragment.view.*
-import com.huelvadevelopers.proyectozero.TreeViewHolder.IconTreeItem
+import android.content.DialogInterface
+import android.widget.EditText
+import android.view.LayoutInflater
+
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -105,6 +112,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if (id == R.id.nav_tags) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_tag)
             goSection(3)
+            fab!!.setOnClickListener {
+                val dialogBuilder = AlertDialog.Builder(this)
+                val inflater = this.layoutInflater
+                val dialogView = inflater.inflate(R.layout.add_category_dialog, null)
+                dialogBuilder.setView(dialogView)
+
+                val edt : EditText = dialogView.findViewById(R.id.category_name) as EditText
+
+                dialogBuilder.setTitle(getString(R.string.sNewCategory))
+                //dialogBuilder.setMessage("Enter text below")
+                dialogBuilder.setPositiveButton("Done") { dialog, whichButton ->
+                    Log.v("Texto", edt.text.toString())
+                    val category = Category(-1, edt.text.toString(), 1, 1)
+                    databaseManager.addCategory(category)
+                    goSection(3)
+                }
+                dialogBuilder.setNegativeButton("Cancel") { dialog, whichButton ->
+                    //pass
+                }
+                val b = dialogBuilder.create()
+                b.show()
+            }
         } else if (id == R.id.nav_profile) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_profile)
             goSection(4)
@@ -135,10 +164,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val root = TreeNode.root().setViewHolder(TreeViewHolder(activity))
 
                 for(category : Category in v){
-                    val node = TreeNode(IconTreeItem(android.R.drawable.ic_input_get, category.name))
+                    val node = TreeNode(category)
                     if(category.parent != null)
                         for(n : TreeNode in root.children) {
-                            if ((n.value as IconTreeItem).text.equals(category.parent?.name)) {
+                            if ((n.value as Category).name.equals(category.parent?.name)) {
                                 n.addChild(node)
                                 break
                             }
