@@ -69,28 +69,29 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             Log.v("click", "click en text")
         }
 
-        view.findViewById(R.id.node_value).setOnLongClickListener {
-            //Log.v("click", "long click en text")
-            var item = ClipData.Item(value.id.toString())
+        if(node.children.size==0) {
+            view.findViewById(R.id.node_value).setOnLongClickListener {
+                //Log.v("click", "long click en text")
+                var item = ClipData.Item(value.id.toString())
 
-            // Create a new ClipData using the tag as a label, the plain text MIME type, and
-            // the already-created item. This will create a new ClipDescription object within the
-            // ClipData, and set its MIME type entry to "text/plain"
-            var dragData : ClipData = ClipData(value.name ,Array(1,{ ClipDescription.MIMETYPE_TEXT_PLAIN }),item)
+                // Create a new ClipData using the tag as a label, the plain text MIME type, and
+                // the already-created item. This will create a new ClipDescription object within the
+                // ClipData, and set its MIME type entry to "text/plain"
+                var dragData: ClipData = ClipData(value.name, Array(1, { ClipDescription.MIMETYPE_TEXT_PLAIN }), item)
 
-            // Instantiates the drag shadow builder.
-            var myShadow = View.DragShadowBuilder(view)
+                // Instantiates the drag shadow builder.
+                var myShadow = View.DragShadowBuilder(view)
 
-            // Starts the drag
+                // Starts the drag
 
-            it.startDrag(dragData,  // the data to be dragged
-                    myShadow,  // the drag shadow builder
-                    null,      // no need to use local data
-                    0          // flags (not currently used, set to 0)
-            )
+                it.startDrag(dragData, // the data to be dragged
+                        myShadow, // the drag shadow builder
+                        null, // no need to use local data
+                        0          // flags (not currently used, set to 0)
+                )
 
+            }
         }
-
         if(node.level==1)
             view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
 
