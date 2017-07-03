@@ -22,8 +22,13 @@ import kotlinx.android.synthetic.main.tags_fragment.*
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.tags_fragment.view.*
 import android.content.DialogInterface
+import android.graphics.Color
 import android.widget.EditText
 import android.view.LayoutInflater
+import kotlinx.android.synthetic.main.layout_icon_node.*
+import android.widget.Toast
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 
 
 
@@ -118,21 +123,66 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val dialogView = inflater.inflate(R.layout.add_category_dialog, null)
                 dialogBuilder.setView(dialogView)
 
-                val edt : EditText = dialogView.findViewById(R.id.category_name) as EditText
+                //Name EditText
+                val edt : EditText = dialogView.findViewById(R.id.add_category_name) as EditText
+                //Parent Spinner
+                val spinner : Spinner = dialogView.findViewById(R.id.add_category_parent) as Spinner
+                val categories = databaseManager.getCategories()
+                val nameParents = ArrayList<String>()
+                nameParents.add("None")
+                val categoryParent = ArrayList<Category>()
+                for ( c : Category in categories ){
+                    if(c.parent==null){
+                        nameParents.add(c.name)
+                        categoryParent.add(c)
+                    }
+                }
+                val adapter : ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_item, nameParents.toTypedArray())
+                spinner.adapter = adapter
+                //Icons GridView
+                val gridView : GridView = dialogView.findViewById(R.id.add_category_icon) as GridView
+                gridView.adapter = ImageAdapter(this)
+                (gridView.adapter as ImageAdapter).selectionId=-1
 
                 dialogBuilder.setTitle(getString(R.string.sNewCategory))
-                //dialogBuilder.setMessage("Enter text below")
                 dialogBuilder.setPositiveButton("Done") { dialog, whichButton ->
-                    Log.v("Texto", edt.text.toString())
-                    val category = Category(-1, edt.text.toString(), 1, 1)
-                    databaseManager.addCategory(category)
-                    goSection(3)
+                    //Vacio porque abajo lo sobrescribimos para decidir si hacer dismiss o no
                 }
                 dialogBuilder.setNegativeButton("Cancel") { dialog, whichButton ->
                     //pass
                 }
-                val b = dialogBuilder.create()
-                b.show()
+                val dialog = dialogBuilder.create()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    var dismiss = true
+                    val errorDialogBuilder = AlertDialog.Builder(this)
+                    errorDialogBuilder.setTitle("Error")
+                    if(edt.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setMessage("Tienes que seleccionar un nombre")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    }
+                    else if((gridView.adapter as ImageAdapter).selectionId == -1) {
+                        dismiss = false
+                        errorDialogBuilder.setTitle("Error")
+                        errorDialogBuilder.setMessage("Tienes que seleccionar un icono")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    }
+                    val category = Category(-1, edt.text.toString(), (gridView.adapter as ImageAdapter).selectionId, 1)
+                    if(spinner.selectedItemPosition != 0)
+                        categoryParent[spinner.selectedItemPosition-1].addChild(category)
+                    databaseManager.addCategory(category)
+                    goSection(3)
+                    if(dismiss) dialog.dismiss()
+                }
             }
         } else if (id == R.id.nav_profile) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_profile)
@@ -176,7 +226,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         root.addChild(node)
                 }
 
-                val tView = AndroidTreeView(activity, root)
+                val tView = MyAndroidTreeView(activity, root)
                 tView.setDefaultViewHolder(TreeViewHolder::class.java)
                 rootView.layoutTag.addView(tView.view)
 
