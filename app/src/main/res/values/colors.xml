@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#000000</color>
     <color name="colorCategorySelector">#ff33b5e5</color>
+    <color name="colorLightRed">#ff9292</color>
+    <color name="colorDarkRed">#ff0000</color>
 </resources>

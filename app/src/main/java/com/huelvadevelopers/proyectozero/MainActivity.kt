@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val tView = MyAndroidTreeView(activity, root)
                 tView.setDefaultViewHolder(TreeViewHolder::class.java)
-                rootView.layoutTag.addView(tView.view)
+                (rootView.layoutTag.findViewById(R.id.treeViewContainer) as LinearLayout).addView(tView.view)
 
                 tView.expandAll()
 
@@ -236,6 +236,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 for(n : TreeNode in root.children) {
                     if (n.children.size == 0)
                         n.viewHolder.view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
+                }
+
+                rootView.findViewById(R.id.removeCategory).setOnDragListener { v, event ->
+                    if(event.action==DragEvent.ACTION_DROP){
+                        val item = event.clipData.getItemAt(0)
+                        var dragData : String = item.text as String
+                        v.setBackgroundColor(resources.getColor(R.color.colorDarkRed))
+                        (activity as MainActivity).databaseManager.removeCategoryById(dragData.toInt())
+                        (activity as MainActivity).goSection(3)
+                    }
+                    else if(event.action == DragEvent.ACTION_DRAG_ENTERED)
+                        v.setBackgroundColor(resources.getColor(R.color.colorDarkRed))
+                    else if(event.action == DragEvent.ACTION_DRAG_EXITED)
+                        v.setBackgroundColor(resources.getColor(R.color.colorLightRed))
+                    true
                 }
 
             } else {

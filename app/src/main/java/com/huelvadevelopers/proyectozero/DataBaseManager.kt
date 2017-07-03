@@ -57,7 +57,11 @@ class DataBaseManager(context: Context) {
 
     fun removeCategory( category : Category) {
         var query = "delete from category where id = "+category.id
-        Log.v("Categoria borrada", category.toString())
+        db!!.execSQL(query)
+    }
+
+    fun removeCategoryById( id : Int) {
+        var query = "delete from category where id = "+id
         db!!.execSQL(query)
     }
 

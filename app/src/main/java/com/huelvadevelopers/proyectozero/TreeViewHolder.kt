@@ -1,5 +1,7 @@
 package com.huelvadevelopers.proyectozero
 
+import android.app.ActionBar
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.opengl.Visibility
@@ -25,11 +27,8 @@ import android.content.ClipDescription
 import android.graphics.drawable.ColorDrawable
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_STARTED
-
-
-
-
-
+import android.view.ViewGroup
+import android.widget.LinearLayout
 
 
 /**
@@ -62,6 +61,11 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
         if(node.children.size==0) {
             view.findViewById(R.id.node_value).setOnLongClickListener {
                 //Log.v("click", "long click en text")
+                val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
+                val params = v.findViewById(R.id.treeViewContainer).layoutParams
+                (params as LinearLayout.LayoutParams).weight=90f
+                v.findViewById(R.id.treeViewContainer).layoutParams = params
+                v.findViewById(R.id.removeCategory).visibility=View.VISIBLE
                 var item = ClipData.Item(value.id.toString())
 
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
@@ -85,10 +89,12 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
         if(node.level==1)
             view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
 
-        view.findViewById(R.id.btn_delete).setOnClickListener {
+
+        view.findViewById(R.id.btn_delete).visibility = View.INVISIBLE
+        /*view.findViewById(R.id.btn_delete).setOnClickListener {
             (context as MainActivity).databaseManager.removeCategory(node.value as Category)
             treeView.removeNode(node)
-        }
+        }*/
 
         view.setPadding( ( node.level - 1 ) * 100, 0, 0, 0)
         return view
@@ -142,12 +148,12 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                     val item = event.getClipData().getItemAt(0)
 
                     // Gets the text data from the item.
-                    var dragData = item.text
+                    var dragData : String = item.text as String
 
                     // Displays a message containing the dragged data.
                     //Toast.makeText(context, "Dragged " + dragData + " into " + category.name, Toast.LENGTH_LONG).show()
                     Log.v("drag",  "Dragged " + dragData + " into " + category.name)
-                    (context as MainActivity).databaseManager.changeCategoryParent(category.id, (item.text as String).toInt())
+                    (context as MainActivity).databaseManager.changeCategoryParent(category.id, dragData.toInt())
                     (context as MainActivity).goSection(3)
 
                     v.setBackgroundColor(android.R.color.background_light)
@@ -159,6 +165,11 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                 DragEvent.ACTION_DRAG_ENDED -> {
 
                     v.setBackgroundColor(android.R.color.background_light)
+                    val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
+                    val params = v.findViewById(R.id.treeViewContainer).layoutParams
+                    (params as LinearLayout.LayoutParams).weight=100f
+                    v.findViewById(R.id.treeViewContainer).layoutParams = params
+                    v.findViewById(R.id.removeCategory).visibility=View.GONE
 
                     // Does a getResult(), and displays what happened.
                     if (event.getResult()) {
