@@ -59,16 +59,6 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
         }
 
-        view.findViewById(R.id.icon).setOnClickListener {
-            //TODO Edit category Icon
-            Log.v("click", "click en icon")
-        }
-
-        view.findViewById(R.id.node_value).setOnClickListener {
-            //TODO Edit category name
-            Log.v("click", "click en text")
-        }
-
         if(node.children.size==0) {
             view.findViewById(R.id.node_value).setOnLongClickListener {
                 //Log.v("click", "long click en text")
@@ -94,13 +84,6 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
         }
         if(node.level==1)
             view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
-
-        view.findViewById(R.id.arrow_icon).setOnClickListener {
-            treeView.toggleNode(node)
-        }
-        view.setOnClickListener {
-            Log.v("click", "click en view")
-        }
 
         view.findViewById(R.id.btn_delete).setOnClickListener {
             (context as MainActivity).databaseManager.removeCategory(node.value as Category)
