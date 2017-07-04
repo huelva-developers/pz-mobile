@@ -118,46 +118,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_tag)
             goSection(3)
             fab!!.setOnClickListener {
-                val dialogBuilder = AlertDialog.Builder(this)
-                val inflater = this.layoutInflater
-                val dialogView = inflater.inflate(R.layout.add_category_dialog, null)
-                dialogBuilder.setView(dialogView)
 
-                //Name EditText
-                val edt : EditText = dialogView.findViewById(R.id.add_category_name) as EditText
-                //Parent Spinner
-                val spinner : Spinner = dialogView.findViewById(R.id.add_category_parent) as Spinner
-                val categories = databaseManager.getCategories()
-                val nameParents = ArrayList<String>()
-                nameParents.add("None")
-                val categoryParent = ArrayList<Category>()
-                for ( c : Category in categories ){
-                    if(c.parent==null){
-                        nameParents.add(c.name)
-                        categoryParent.add(c)
-                    }
-                }
-                val adapter : ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_item, nameParents.toTypedArray())
-                spinner.adapter = adapter
-                //Icons GridView
-                val gridView : GridView = dialogView.findViewById(R.id.add_category_icon) as GridView
-                gridView.adapter = ImageAdapter(this)
-                (gridView.adapter as ImageAdapter).selectionId=-1
-
-                dialogBuilder.setTitle(getString(R.string.sNewCategory))
-                dialogBuilder.setPositiveButton("Done") { dialog, whichButton ->
-                    //Vacio porque abajo lo sobrescribimos para decidir si hacer dismiss o no
-                }
-                dialogBuilder.setNegativeButton("Cancel") { dialog, whichButton ->
-                    //pass
-                }
-                val dialog = dialogBuilder.create()
+                val dialog = CategoryDialog(this)
                 dialog.show()
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                dialog.mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     var dismiss = true
                     val errorDialogBuilder = AlertDialog.Builder(this)
                     errorDialogBuilder.setTitle("Error")
-                    if(edt.text.toString().isEmpty()) {
+                    if(dialog.edt.text.toString().isEmpty()) {
                         dismiss = false
                         errorDialogBuilder.setMessage("Tienes que seleccionar un nombre")
                         errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
@@ -166,7 +134,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         errorDialogBuilder.create().show()
                         return@setOnClickListener
                     }
-                    else if((gridView.adapter as ImageAdapter).selectionId == -1) {
+                    else if((dialog.gridView.adapter as ImageAdapter).selectionId == -1) {
                         dismiss = false
                         errorDialogBuilder.setTitle("Error")
                         errorDialogBuilder.setMessage("Tienes que seleccionar un icono")
@@ -176,12 +144,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         errorDialogBuilder.create().show()
                         return@setOnClickListener
                     }
-                    val category = Category(-1, edt.text.toString(), (gridView.adapter as ImageAdapter).selectionId, 1)
-                    if(spinner.selectedItemPosition != 0)
-                        categoryParent[spinner.selectedItemPosition-1].addChild(category)
+                    val category = Category(-1, dialog.edt.text.toString(), (dialog.gridView.adapter as ImageAdapter).selectionId, 1)
+                    if(dialog.spinner.selectedItemPosition != 0)
+                        dialog.categoryParent[dialog.spinner.selectedItemPosition-1].addChild(category)
                     databaseManager.addCategory(category)
                     goSection(3)
-                    if(dismiss) dialog.dismiss()
+                    if(dismiss) dialog.mAlertDialog.dismiss()
                 }
             }
         } else if (id == R.id.nav_profile) {
