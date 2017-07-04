@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fab!!.setOnClickListener {
 
                 val dialog = CategoryDialog(this)
+                dialog.currentCategory = null
                 dialog.show()
                 dialog.mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     var dismiss = true

@@ -2,6 +2,7 @@ package com.huelvadevelopers.proyectozero
 
 import android.app.ActionBar
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.opengl.Visibility
@@ -21,6 +22,7 @@ import android.view.DragEvent.ACTION_DRAG_EXITED
 import android.view.DragEvent.ACTION_DRAG_LOCATION
 import android.view.DragEvent.ACTION_DRAG_ENTERED
 import android.content.ClipDescription
+import android.content.DialogInterface
 import android.graphics.drawable.ColorDrawable
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_STARTED
@@ -48,8 +50,6 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
         arrowView = view.findViewById(R.id.arrow_icon) as PrintView
 
-
-        view.findViewById(R.id.btn_addFolder).visibility = View.INVISIBLE
         if(node.level == 2) {
             view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
         }
@@ -94,12 +94,40 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
         if(node.level==1)
             view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
 
-
-        view.findViewById(R.id.btn_delete).visibility = View.INVISIBLE
-        /*view.findViewById(R.id.btn_delete).setOnClickListener {
-            (context as MainActivity).databaseManager.removeCategory(node.value as Category)
-            treeView.removeNode(node)
-        }*/
+        view.findViewById(R.id.btn_edit).setOnClickListener {
+            val dialog = CategoryDialog(context)
+            dialog.currentCategory=value
+            dialog.show()
+            dialog.mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                var dismiss = true
+                val errorDialogBuilder = AlertDialog.Builder(context)
+                errorDialogBuilder.setTitle("Error")
+                if (dialog.edt.text.toString().isEmpty()) {
+                    dismiss = false
+                    errorDialogBuilder.setMessage("Tienes que seleccionar un nombre")
+                    errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                        //pass
+                    }
+                    errorDialogBuilder.create().show()
+                    return@setOnClickListener
+                } else if ((dialog.gridView.adapter as ImageAdapter).selectionId == -1) {
+                    dismiss = false
+                    errorDialogBuilder.setTitle("Error")
+                    errorDialogBuilder.setMessage("Tienes que seleccionar un icono")
+                    errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                        //pass
+                    }
+                    errorDialogBuilder.create().show()
+                    return@setOnClickListener
+                }
+                val category = Category(dialog.currentCategory!!.id, dialog.edt.text.toString(), (dialog.gridView.adapter as ImageAdapter).selectionId, 1)
+                if (dialog.spinner.selectedItemPosition != 0)
+                    dialog.categoryParent[dialog.spinner.selectedItemPosition - 1].addChild(category)
+                (context as MainActivity).databaseManager.editCategory(category)
+                (context as MainActivity).goSection(3)
+                if (dismiss) dialog.mAlertDialog.dismiss()
+            }
+        }
 
         view.setPadding( ( node.level - 1 ) * 100, 0, 0, 0)
         return view

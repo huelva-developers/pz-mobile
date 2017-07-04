@@ -25,8 +25,8 @@
         android:layout_toRightOf="@id/arrow_icon"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 
     <TextView
         android:layout_centerVertical="true"
@@ -48,25 +48,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.github.johnkil.print.PrintView
-            android:id="@+id/btn_addFolder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/btn_edit"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:padding="5dp"
-            app:iconSize="20dp"
-            app:iconColor="#99cc00"
-            app:iconFont="fonts/material-icon-font.ttf"
-            app:iconText="@string/ic_add" />
-
-
-        <com.github.johnkil.print.PrintView
-            android:padding="5dp"
-            android:id="@+id/btn_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:iconSize="20dp"
-            app:iconColor="#ff4444"
-            app:iconFont="fonts/material-icon-font.ttf"
-            app:iconText="@string/ic_close" />
+            android:background="@android:drawable/ic_menu_edit"
+            android:backgroundTint="@color/colorLightGray"/>
     </LinearLayout>
 </RelativeLayout>

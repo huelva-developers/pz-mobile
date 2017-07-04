@@ -7,6 +7,7 @@ import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import com.huelvadevelopers.proyectozero.model.Category
 
@@ -22,6 +23,8 @@ class CategoryDialog(context : Context) : Builder( context ){
     lateinit var spinner : Spinner
     lateinit var gridView : GridView
     var categoryParent = ArrayList<Category>()
+    var currentCategory : Category? = null // Solo se usa para editar categories
+
 
     override fun show(): AlertDialog {
         val dialogView = LayoutInflater.from(mContex).inflate(R.layout.add_category_dialog, null)
@@ -54,6 +57,22 @@ class CategoryDialog(context : Context) : Builder( context ){
         }
         setNegativeButton("Cancel") { dialog, whichButton ->
             //pass
+        }
+        if(currentCategory != null){
+            edt.setText(currentCategory!!.name)
+            if(currentCategory!!.children.size>0)
+                dialogView.findViewById(R.id.add_category_parent_layout).visibility = View.GONE
+            else {
+                if(currentCategory!!.parent==null)
+                    spinner.setSelection(0)
+                else {
+                    for (c: Category in categoryParent) {
+                        if (c.id == currentCategory!!.parent!!.id)
+                            spinner.setSelection(categoryParent.indexOf(c)+1)
+                    }
+                }
+            }
+            (gridView.adapter as ImageAdapter).selectionId= currentCategory!!.icon
         }
         mAlertDialog = super.show()
         return mAlertDialog

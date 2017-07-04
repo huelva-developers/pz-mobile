@@ -65,6 +65,18 @@ class DataBaseManager(context: Context) {
         db!!.execSQL(query)
     }
 
+    fun editCategory( category: Category) {
+        val cv = ContentValues()
+        cv.put("id",category.id)
+        if(category.parent!=null)
+            cv.put("parent_id", category.parent?.id)
+        cv.put("name", category.name)
+        cv.put("icon", category.icon)
+        cv.put("type", category.type)
+
+        db!!.replace("category",null,cv)
+    }
+
     fun addCategory( category : Category) {
         val cv = ContentValues()
         if(category.parent!=null)
