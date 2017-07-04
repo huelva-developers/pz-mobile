@@ -44,7 +44,6 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
 
         val iconView = view.findViewById(R.id.icon) as ImageView
-        //TODO conversion Category.icon al icono correspondiente
         iconView.setImageResource( context.resources.obtainTypedArray(R.array.icons).getResourceId(value.icon, -1))
 
         arrowView = view.findViewById(R.id.arrow_icon) as PrintView
@@ -76,7 +75,7 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             dragData.addItem(ClipData.Item(node.children.size.toString()))
 
             // Instantiates the drag shadow builder.
-            var myShadow = View.DragShadowBuilder(view)
+            var myShadow = CustomDragShadowBuilder(view)
             view.visibility = View.GONE
             for(n : TreeNode in node.children){
                 n.viewHolder.view.visibility = View.GONE
