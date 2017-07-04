@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.opengl.Visibility
 import android.util.Log
-import android.widget.TextView
 import android.view.LayoutInflater
 import android.view.View
 import com.github.johnkil.print.PrintView
@@ -14,9 +13,7 @@ import com.huelvadevelopers.proyectozero.model.Category
 import com.unnamed.b.atv.model.TreeNode
 
 import com.unnamed.b.atv.model.TreeNode.BaseNodeViewHolder
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemLongClickListener
-import android.widget.Toast
 import android.view.DragEvent.ACTION_DRAG_ENDED
 import android.content.ClipData
 import android.view.DragEvent.ACTION_DROP
@@ -28,7 +25,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_STARTED
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.*
 
 
 /**
@@ -46,9 +43,9 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
         tvValue!!.text = value.name
 
 
-        val iconView = view.findViewById(R.id.icon) as PrintView
+        val iconView = view.findViewById(R.id.icon) as ImageView
         //TODO conversion Category.icon al icono correspondiente
-        iconView.setImageResource(android.R.drawable.ic_input_get)
+        iconView.setImageResource( context.resources.obtainTypedArray(R.array.icons).getResourceId(value.icon, -1))
 
         arrowView = view.findViewById(R.id.arrow_icon) as PrintView
 

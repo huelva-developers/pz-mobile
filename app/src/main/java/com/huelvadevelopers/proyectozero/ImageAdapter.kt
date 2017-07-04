@@ -1,6 +1,7 @@
 package com.huelvadevelopers.proyectozero
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.util.Log
 import android.view.View
 import android.widget.ImageView.ScaleType
@@ -17,11 +18,11 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
     var selectionId = -1
 
     override fun getCount(): Int {
-        return mThumbIds.size
+        return mThumbIds.length()
     }
 
     override fun getItem(position: Int): Any? {
-        return mThumbIds[position]
+        return mThumbIds.getResourceId(position,-1)
     }
 
     override fun getItemId(position: Int): Long {
@@ -40,7 +41,7 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
         } else {
             imageView = (convertView as ImageView?)!!
         }
-        imageView.setImageResource(mThumbIds[position])
+        imageView.setImageResource(mThumbIds.getResourceId(position,-1))
         imageView.setOnTouchListener { v, event ->
             selectionId = position
             false
@@ -49,15 +50,5 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
     }
 
     // references to our images
-    private val mThumbIds = arrayOf(
-            R.drawable.home,
-            R.drawable.dashboard,
-            R.drawable.exit,
-            R.drawable.gamepad,
-            R.drawable.leaderboards_simple,
-            R.drawable.massive_multiplayer,
-            R.drawable.movie,
-            R.drawable.music_on,
-            R.drawable.shopping_cart,
-            R.drawable.wrench)
+    private val mThumbIds : TypedArray = mContext.resources.obtainTypedArray(R.array.icons)
 }

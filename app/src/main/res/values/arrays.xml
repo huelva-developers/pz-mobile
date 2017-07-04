@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="icons">
+        <item>@drawable/home</item>
+        <item>@drawable/dashboard</item>
+        <item>@drawable/exit</item>
+        <item>@drawable/gamepad</item>
+        <item>@drawable/leaderboards_simple</item>
+        <item>@drawable/massive_multiplayer</item>
+        <item>@drawable/movie</item>
+        <item>@drawable/music_on</item>
+        <item>@drawable/shopping_cart</item>
+        <item>@drawable/wrench</item>
+    </integer-array>
+</resources>
