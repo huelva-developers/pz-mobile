@@ -58,33 +58,33 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
         }
 
-        if(node.children.size==0) {
-            view.findViewById(R.id.node_value).setOnLongClickListener {
-                //Log.v("click", "long click en text")
-                val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
-                val params = v.findViewById(R.id.treeViewContainer).layoutParams
-                (params as LinearLayout.LayoutParams).weight=90f
-                v.findViewById(R.id.treeViewContainer).layoutParams = params
-                v.findViewById(R.id.removeCategory).visibility=View.VISIBLE
-                var item = ClipData.Item(value.id.toString())
+        view.findViewById(R.id.node_value).setOnLongClickListener {
+            //Log.v("click", "long click en text")
+            val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
+            val params = v.findViewById(R.id.treeViewContainer).layoutParams
+            (params as LinearLayout.LayoutParams).weight = 90f
+            v.findViewById(R.id.treeViewContainer).layoutParams = params
+            v.findViewById(R.id.removeCategory).visibility = View.VISIBLE
+            var item = ClipData.Item(value.id.toString())
 
-                // Create a new ClipData using the tag as a label, the plain text MIME type, and
-                // the already-created item. This will create a new ClipDescription object within the
-                // ClipData, and set its MIME type entry to "text/plain"
-                var dragData: ClipData = ClipData(value.name, Array(1, { ClipDescription.MIMETYPE_TEXT_PLAIN }), item)
+            // Create a new ClipData using the tag as a label, the plain text MIME type, and
+            // the already-created item. This will create a new ClipDescription object within the
+            // ClipData, and set its MIME type entry to "text/plain"
+            var dragData: ClipData = ClipData(value.name, Array(1, { ClipDescription.MIMETYPE_TEXT_PLAIN }), item)
+            //Añadimos el numero de subcategorías para despues aceptar el cambio de padre o no
+            dragData.addItem(ClipData.Item(node.children.size.toString()))
 
-                // Instantiates the drag shadow builder.
-                var myShadow = View.DragShadowBuilder(view)
+            // Instantiates the drag shadow builder.
+            var myShadow = View.DragShadowBuilder(view)
 
-                // Starts the drag
+            // Starts the drag
 
-                it.startDrag(dragData, // the data to be dragged
-                        myShadow, // the drag shadow builder
-                        null, // no need to use local data
-                        0          // flags (not currently used, set to 0)
-                )
+            it.startDrag(dragData, // the data to be dragged
+                    myShadow, // the drag shadow builder
+                    null, // no need to use local data
+                    0          // flags (not currently used, set to 0)
+            )
 
-            }
         }
         if(node.level==1)
             view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
@@ -119,7 +119,7 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                 DragEvent.ACTION_DRAG_STARTED -> {
 
                     // Determines if this View can accept the dragged data
-                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                    if (event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         // returns true to indicate that the View can accept the dragged data.
                         return true
                     }
@@ -144,18 +144,19 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
                 DragEvent.ACTION_DROP -> {
 
-                    // Gets the item containing the dragged data
-                    val item = event.getClipData().getItemAt(0)
-
-                    // Gets the text data from the item.
-                    var dragData : String = item.text as String
+                    // Obtenemos el id de la categoria que hizo drag
+                    val dragCategoryId : String = event.clipData.getItemAt(0).text as String
+                    //Obtenemos el numero de subcategorias
+                    val nChildren = (event.clipData.getItemAt(1).text as String).toInt()
 
                     // Displays a message containing the dragged data.
                     //Toast.makeText(context, "Dragged " + dragData + " into " + category.name, Toast.LENGTH_LONG).show()
-                    Log.v("drag",  "Dragged " + dragData + " into " + category.name)
-                    (context as MainActivity).databaseManager.changeCategoryParent(category.id, dragData.toInt())
-                    (context as MainActivity).goSection(3)
-
+                    Log.v("drag",  "Dragged " + dragCategoryId + " into " + category.name)
+                    if(nChildren == 0) {
+                        //TODO dialogo de error
+                        (context as MainActivity).databaseManager.changeCategoryParent(category.id, dragCategoryId.toInt())
+                        (context as MainActivity).goSection(3)
+                    }
                     v.setBackgroundColor(android.R.color.background_light)
 
                     // Returns true. DragEvent.getResult() will return true.
