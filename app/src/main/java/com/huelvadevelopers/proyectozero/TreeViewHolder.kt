@@ -77,6 +77,9 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             // Instantiates the drag shadow builder.
             var myShadow = View.DragShadowBuilder(view)
             view.visibility = View.GONE
+            for(n : TreeNode in node.children){
+                n.viewHolder.view.visibility = View.GONE
+            }
 
             // Starts the drag
 
@@ -156,8 +159,8 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                     if(nChildren == 0) {
                         //TODO dialogo de error
                         (context as MainActivity).databaseManager.changeCategoryParent(category.id, dragCategoryId.toInt())
-                        (context as MainActivity).goSection(3)
                     }
+                    (context as MainActivity).goSection(3)
                     v.setBackgroundColor(android.R.color.background_light)
 
                     // Returns true. DragEvent.getResult() will return true.
