@@ -78,7 +78,11 @@ class DataBaseManager(context: Context) {
     }
 
     fun changeCategoryParent( parentId : Int, childrenId : Int){
-        val query = "update category set parent_id = $parentId where id = $childrenId"
+        val query : String
+        if(parentId != 0)
+            query = "update category set parent_id = $parentId where id = $childrenId"
+        else
+            query = "update category set parent_id = null where id = $childrenId"
         db!!.execSQL(query)
     }
 }
