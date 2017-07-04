@@ -76,6 +76,7 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
             // Instantiates the drag shadow builder.
             var myShadow = View.DragShadowBuilder(view)
+            view.visibility = View.GONE
 
             // Starts the drag
 
