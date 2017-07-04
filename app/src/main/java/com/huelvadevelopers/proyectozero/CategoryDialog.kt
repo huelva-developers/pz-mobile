@@ -58,7 +58,7 @@ class CategoryDialog(context : Context) : Builder( context ){
         setNegativeButton("Cancel") { dialog, whichButton ->
             //pass
         }
-        if(currentCategory != null){
+        if(currentCategory != null){ //Si currentCategory no es nulo es porque estamos editanto
             edt.setText(currentCategory!!.name)
             if(currentCategory!!.children.size>0)
                 dialogView.findViewById(R.id.add_category_parent_layout).visibility = View.GONE
@@ -73,6 +73,7 @@ class CategoryDialog(context : Context) : Builder( context ){
                 }
             }
             (gridView.adapter as ImageAdapter).selectionId= currentCategory!!.icon
+            setTitle(context.getString(R.string.sEditCategory))
         }
         mAlertDialog = super.show()
         return mAlertDialog
