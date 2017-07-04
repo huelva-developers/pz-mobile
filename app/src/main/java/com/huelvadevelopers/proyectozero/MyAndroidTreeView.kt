@@ -3,6 +3,7 @@ package com.huelvadevelopers.proyectozero
 import android.content.Context
 import android.view.DragEvent
 import android.view.View
+import android.widget.LinearLayout
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 
@@ -26,6 +27,8 @@ class MyAndroidTreeView(context: Context, root : TreeNode) : AndroidTreeView(con
             }
             true
         }
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
+        view.layoutParams=params
         return view
     }
 }
