@@ -58,6 +58,10 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
             view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
         }
 
+        view.findViewById(R.id.node_value).setOnClickListener {
+            treeView.toggleNode(node)
+        }
+
         view.findViewById(R.id.node_value).setOnLongClickListener {
             //Log.v("click", "long click en text")
             val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
@@ -88,6 +92,7 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                     null, // no need to use local data
                     0          // flags (not currently used, set to 0)
             )
+            true
 
         }
         if(node.level==1)
