@@ -15,6 +15,7 @@ import android.widget.*
 
 class ImageAdapter(private val mContext: Context) : BaseAdapter() {
 
+    //Icono seleccionado
     var selectionId = 0
 
     override fun getCount(): Int {
@@ -47,6 +48,7 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
             notifyDataSetChanged()
             false
         }
+        //Si es el icono seleccionado actualmente le ponemos color de fondo
         if(selectionId==position)
             imageView.setBackgroundColor(mContext.resources.getColor(R.color.colorCategorySelector))
         else

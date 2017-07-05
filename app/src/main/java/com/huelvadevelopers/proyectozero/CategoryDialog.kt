@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import com.huelvadevelopers.proyectozero.model.Category
+import kotlinx.android.synthetic.main.add_category_dialog.view.*
 
 /**
  * Created by DrAP on 04/07/2017.
@@ -31,9 +32,11 @@ class CategoryDialog(context : Context) : Builder( context ){
         setView(dialogView)
 
         //Name EditText
-        edt = dialogView.findViewById(R.id.add_category_name) as EditText
+        edt = dialogView.add_category_name as EditText
+
         //Parent Spinner
-        spinner = dialogView.findViewById(R.id.add_category_parent) as Spinner
+        spinner = dialogView.add_category_parent as Spinner
+        //En categories estan todas las categorías, y en nameParents y categoryParents las que pueden tener subcategorias
         val categories = (mContex as MainActivity).databaseManager.getCategories()
         val nameParents = ArrayList<String>()
         nameParents.add("None")
@@ -46,9 +49,11 @@ class CategoryDialog(context : Context) : Builder( context ){
         }
         val adapter : ArrayAdapter<String> = ArrayAdapter(mContex, android.R.layout.simple_spinner_item, nameParents.toTypedArray())
         spinner.adapter = adapter
+
         //Icons GridView
         gridView = dialogView.findViewById(R.id.add_category_icon) as GridView
         gridView.adapter = ImageAdapter(mContex)
+        //Por defecto el icono será el 0
         (gridView.adapter as ImageAdapter).selectionId=0
 
         setTitle(mContex.getString(R.string.sNewCategory))
@@ -60,6 +65,7 @@ class CategoryDialog(context : Context) : Builder( context ){
         }
         if(currentCategory != null){ //Si currentCategory no es nulo es porque estamos editanto
             edt.setText(currentCategory!!.name)
+            //Si la categoria que vamos a editar tiene subcategorias le quitamos la seleccion de padre
             if(currentCategory!!.children.size>0)
                 dialogView.findViewById(R.id.add_category_parent_layout).visibility = View.GONE
             else {

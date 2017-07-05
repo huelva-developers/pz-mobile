@@ -11,6 +11,7 @@ import android.view.View
 
 class CustomDragShadowBuilder(internal var v: View) : View.DragShadowBuilder(v) {
 
+    //sobrescribimos para setear la posicion del pivote
     override fun onProvideShadowMetrics(shadowSize: Point, touchPoint: Point) {
         shadowSize.set(v.width, v.height)
         touchPoint.set(v.width /4, v.height /2)

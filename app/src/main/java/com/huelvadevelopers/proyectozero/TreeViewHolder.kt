@@ -28,6 +28,8 @@ import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_STARTED
 import android.view.ViewGroup
 import android.widget.*
+import kotlinx.android.synthetic.main.layout_icon_node.view.*
+import kotlinx.android.synthetic.main.tags_fragment.view.*
 
 
 /**
@@ -41,30 +43,30 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
     override fun createNodeView(node: TreeNode, value: Category): View {
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.layout_icon_node, null, false)
-        tvValue = view.findViewById(R.id.node_value) as TextView
+        tvValue = view.node_value as TextView
         tvValue!!.text = value.name
 
 
-        val iconView = view.findViewById(R.id.icon) as ImageView
+        val iconView = view.icon
         iconView.setImageResource( context.resources.obtainTypedArray(R.array.icons).getResourceId(value.icon, -1))
 
-        arrowView = view.findViewById(R.id.arrow_icon) as PrintView
+        arrowView = view.arrow_icon as PrintView
 
         if(node.level == 2) {
-            view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
+            view.arrow_icon.visibility = View.INVISIBLE
         }
 
-        view.findViewById(R.id.node_value).setOnClickListener {
+        view.node_value.setOnClickListener {
             treeView.toggleNode(node)
         }
 
-        view.findViewById(R.id.node_value).setOnLongClickListener {
+        view.node_value.setOnLongClickListener {
             //Log.v("click", "long click en text")
             val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
-            val params = v.findViewById(R.id.treeViewContainer).layoutParams
+            val params = v.treeViewContainer.layoutParams
             (params as LinearLayout.LayoutParams).weight = 90f
-            v.findViewById(R.id.treeViewContainer).layoutParams = params
-            v.findViewById(R.id.removeCategory).visibility = View.VISIBLE
+            v.treeViewContainer.layoutParams = params
+            v.removeCategory.visibility = View.VISIBLE
             var item = ClipData.Item(value.id.toString())
 
             // Create a new ClipData using the tag as a label, the plain text MIME type, and
@@ -92,9 +94,9 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
         }
         if(node.level==1)
-            view.findViewById(R.id.node_value).setOnDragListener(MyDragEventListener(value))
+            view.node_value.setOnDragListener(MyDragEventListener(value))
 
-        view.findViewById(R.id.btn_edit).setOnClickListener {
+        view.btn_edit.setOnClickListener {
             val dialog = CategoryDialog(context)
             dialog.currentCategory=value
             dialog.show()
@@ -200,10 +202,10 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
                     v.setBackgroundColor(android.R.color.background_light)
                     val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
-                    val params = v.findViewById(R.id.treeViewContainer).layoutParams
+                    val params = v.treeViewContainer.layoutParams
                     (params as LinearLayout.LayoutParams).weight=100f
-                    v.findViewById(R.id.treeViewContainer).layoutParams = params
-                    v.findViewById(R.id.removeCategory).visibility=View.GONE
+                    v.treeViewContainer.layoutParams = params
+                    v.removeCategory.visibility=View.GONE
 
                     // Does a getResult(), and displays what happened.
                     if (event.getResult()) {
@@ -225,5 +227,5 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
 
             return false
         }
-    };
+    }
 }

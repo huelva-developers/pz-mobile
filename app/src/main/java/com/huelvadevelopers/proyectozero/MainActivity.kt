@@ -29,8 +29,7 @@ import kotlinx.android.synthetic.main.layout_icon_node.*
 import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-
-
+import kotlinx.android.synthetic.main.layout_icon_node.view.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -197,17 +196,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val tView = MyAndroidTreeView(activity, root)
                 tView.setDefaultViewHolder(TreeViewHolder::class.java)
-                (rootView.layoutTag.findViewById(R.id.treeViewContainer) as LinearLayout).addView(tView.view)
+                (rootView.layoutTag.treeViewContainer as LinearLayout).addView(tView.view)
 
                 tView.expandAll()
 
                 //Quitamos la flechita a los nodos de la raiz sin hijos
                 for(n : TreeNode in root.children) {
                     if (n.children.size == 0)
-                        n.viewHolder.view.findViewById(R.id.arrow_icon).visibility = View.INVISIBLE
+                        n.viewHolder.view.arrow_icon.visibility = View.INVISIBLE
                 }
 
-                rootView.findViewById(R.id.removeCategory).setOnDragListener { v, event ->
+                rootView.removeCategory.setOnDragListener { v, event ->
                     if(event.action==DragEvent.ACTION_DROP){
                         val item = event.clipData.getItemAt(0)
                         var dragData : String = item.text as String
