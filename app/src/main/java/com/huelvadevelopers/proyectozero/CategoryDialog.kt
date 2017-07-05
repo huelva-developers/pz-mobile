@@ -49,7 +49,7 @@ class CategoryDialog(context : Context) : Builder( context ){
         //Icons GridView
         gridView = dialogView.findViewById(R.id.add_category_icon) as GridView
         gridView.adapter = ImageAdapter(mContex)
-        (gridView.adapter as ImageAdapter).selectionId=-1
+        (gridView.adapter as ImageAdapter).selectionId=0
 
         setTitle(mContex.getString(R.string.sNewCategory))
         setPositiveButton("Done") { dialog, whichButton ->
@@ -72,7 +72,8 @@ class CategoryDialog(context : Context) : Builder( context ){
                     }
                 }
             }
-            (gridView.adapter as ImageAdapter).selectionId= currentCategory!!.icon
+            (gridView.adapter as ImageAdapter).selectionId = currentCategory!!.icon
+            (gridView.adapter as ImageAdapter).notifyDataSetChanged()
             setTitle(context.getString(R.string.sEditCategory))
         }
         mAlertDialog = super.show()

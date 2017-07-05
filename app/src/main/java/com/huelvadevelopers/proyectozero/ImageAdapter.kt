@@ -2,7 +2,7 @@ package com.huelvadevelopers.proyectozero
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.util.Log
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView.ScaleType
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import android.widget.*
 
 class ImageAdapter(private val mContext: Context) : BaseAdapter() {
 
-    var selectionId = -1
+    var selectionId = 0
 
     override fun getCount(): Int {
         return mThumbIds.length()
@@ -44,8 +44,13 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
         imageView.setImageResource(mThumbIds.getResourceId(position,-1))
         imageView.setOnTouchListener { v, event ->
             selectionId = position
+            notifyDataSetChanged()
             false
         }
+        if(selectionId==position)
+            imageView.setBackgroundColor(mContext.resources.getColor(R.color.colorCategorySelector))
+        else
+            imageView.setBackgroundColor(Color.TRANSPARENT)
         return imageView
     }
 
