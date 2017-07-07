@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.layout_icon_node.*
 import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
+import com.huelvadevelopers.proyectozero.model.BankAccount
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
 
 
@@ -107,13 +108,59 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (id == R.id.nav_dashboard) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_dashboard)
             goSection(0)
-        } else if (id == R.id.nav_transactions) {
+        }
+        else if (id == R.id.nav_transactions) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_transactions)
             goSection(1)
-        } else if (id == R.id.nav_accounts) {
+        }
+        else if (id == R.id.nav_accounts) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_accounts)
             goSection(2)
-        } else if (id == R.id.nav_tags) {
+            fab!!.setOnClickListener {
+
+                val dialog = BankAccountDialog(this)
+                dialog.currentAccount = null
+                dialog.show()
+                dialog.mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    var dismiss = true
+                    val errorDialogBuilder = AlertDialog.Builder(this)
+                    errorDialogBuilder.setTitle("Error")
+                    if (dialog.edtName.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setMessage("Tienes que seleccionar un nombre")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    } else if (dialog.edtDescription.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setTitle("Error")
+                        errorDialogBuilder.setMessage("Tienes que proporcionar una descripción.")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    } else if (dialog.edtBalance.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setTitle("Error")
+                        errorDialogBuilder.setMessage("Tienes que indicar el saldo actual.")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    }
+                    val account = BankAccount(-1, dialog.edtName.text.toString(), dialog.edtDescription.text.toString(),
+                            dialog.edtBalance.text.toString().toInt(), dialog.spinner.selectedItem as String)
+                    databaseManager.addBankAccount(account)
+                    goSection(2)
+                    if (dismiss) dialog.mAlertDialog.dismiss()
+                }
+            }
+        }
+        else if (id == R.id.nav_tags) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_tag)
             goSection(3)
             fab!!.setOnClickListener {
@@ -152,7 +199,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if(dismiss) dialog.mAlertDialog.dismiss()
                 }
             }
-        } else if (id == R.id.nav_profile) {
+        }
+        else if (id == R.id.nav_profile) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_profile)
             goSection(4)
         }

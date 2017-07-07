@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.os.Environment
 import android.util.Log
+import com.huelvadevelopers.proyectozero.model.BankAccount
 import com.huelvadevelopers.proyectozero.model.Category
 
 import java.io.File
@@ -96,5 +97,16 @@ class DataBaseManager(context: Context) {
         else
             query = "update category set parent_id = null where id = $childrenId"
         db!!.execSQL(query)
+    }
+
+    fun addBankAccount( account : BankAccount) {
+        val cv = ContentValues()
+        cv.put("name", account.name)
+        cv.put("description", account.description)
+        cv.put("balance", account.balance)
+        cv.put("currency", account.currency)
+
+        db!!.insert("bank_account",null,cv)
+        //Log.v("Categoria insertada", account.toString())
     }
 }
