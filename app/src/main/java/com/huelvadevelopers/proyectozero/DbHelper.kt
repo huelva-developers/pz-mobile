@@ -18,15 +18,24 @@ class DbHelper(context: Context)
                 "icon INT NOT NULL, "+
                 "type INT NOT NULL, "+
                 "FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE CASCADE)")
+
+        db.execSQL("CREATE TABLE bank_account (id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
+                "name VARCHAR NOT NULL ,description VARCHAR NOT NULL ,balance FLOAT NOT NULL ,"+
+                "currency VARCHAR NOT NULL ,created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
+                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
     }
 
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
+        if(oldVersion==1)
+            db.execSQL("CREATE TABLE bank_account (id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
+                    "name VARCHAR NOT NULL ,description VARCHAR NOT NULL ,balance FLOAT NOT NULL ,"+
+                    "currency VARCHAR NOT NULL ,created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
+                    "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
     }
 
     companion object {
         private val DB_NAME = "pz.sqlite"
-        private val DB_SHEME_VERSION = 1
+        private val DB_SHEME_VERSION = 2
     }
 }
