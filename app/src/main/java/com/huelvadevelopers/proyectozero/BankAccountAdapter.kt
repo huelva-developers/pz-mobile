@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.accounts_fragment.view.*
 import kotlinx.android.synthetic.main.bank_account_layout.view.*
 import android.widget.TextView
 import android.widget.AbsListView
-
-
+import java.text.NumberFormat
+import java.util.*
 
 
 /**
@@ -50,7 +50,15 @@ class BankAccountAdapter(context : Activity, val accounts : ArrayList<BankAccoun
         val account = accounts[position]
         holder.nameTextView!!.text = account.name
         holder.descriptionTextView!!.text = account.description
-        holder.balanceTextView!!.text = account.balance.toString()+account.currency
+        val format : NumberFormat
+        if(account.currency.equals("\u20AC"))
+            format = NumberFormat.getInstance(Locale.GERMAN)
+        else if(account.currency.equals("\u00A3"))
+            format = NumberFormat.getInstance(Locale.UK)
+        else
+            format = NumberFormat.getInstance(Locale.US)
+        val money = format.format(account.balance)
+        holder.balanceTextView!!.text = money.toString() + account.currency
         holder.colorImageView!!.setImageResource(context.resources.obtainTypedArray(R.array.account_color).getResourceId(account.color, -1))
         if(account.balance >= 0)
             holder.balanceTextView!!.setTextColor(context.resources.getColor(R.color.colorPositiveBalance))

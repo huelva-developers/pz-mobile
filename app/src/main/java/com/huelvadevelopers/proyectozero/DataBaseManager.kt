@@ -115,7 +115,7 @@ class DataBaseManager(context: Context) {
         val cursor = db!!.rawQuery(query, null)
         val v = ArrayList<BankAccount>()
         while (cursor.moveToNext()) {
-            val account= BankAccount(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3), cursor.getString(4),
+            val account= BankAccount(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getDouble(3), cursor.getString(4),
                     cursor.getInt(5))
             v.add(account)
         }
@@ -126,4 +126,5 @@ class DataBaseManager(context: Context) {
         var query = "delete from bank_account where id = "+id
         db!!.execSQL(query)
     }
+
 }
