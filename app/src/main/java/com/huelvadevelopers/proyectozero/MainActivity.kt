@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         return@setOnClickListener
                     }
                     val account = BankAccount(-1, dialog.edtName.text.toString(), dialog.edtDescription.text.toString(),
-                            dialog.edtBalance.text.toString().toInt(), dialog.spinner.selectedItem as String)
+                            dialog.edtBalance.text.toString().toFloat(), dialog.spinner.selectedItem as String)
                     databaseManager.addBankAccount(account)
                     goSection(2)
                     if (dismiss) dialog.mAlertDialog.dismiss()

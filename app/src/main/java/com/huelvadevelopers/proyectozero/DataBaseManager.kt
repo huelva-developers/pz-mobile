@@ -114,7 +114,7 @@ class DataBaseManager(context: Context) {
         val cursor = db!!.rawQuery(query, null)
         val v = ArrayList<BankAccount>()
         while (cursor.moveToNext()) {
-            val account= BankAccount(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4))
+            val account= BankAccount(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3), cursor.getString(4))
             v.add(account)
         }
         return v
