@@ -7,4 +7,6 @@
     <color name="colorLightRed">#ff9292</color>
     <color name="colorDarkRed">#ff0000</color>
     <color name="colorLightGray">#a3a3a3</color>
+    <color name="colorPositiveBalance">#098303</color>
+    <color name="colorNegativeBalance">#c60404</color>
 </resources>

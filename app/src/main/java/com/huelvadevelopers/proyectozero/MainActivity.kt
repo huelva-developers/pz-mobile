@@ -30,6 +30,9 @@ import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import com.huelvadevelopers.proyectozero.model.BankAccount
+import kotlinx.android.synthetic.main.accounts_fragment.view.*
+import kotlinx.android.synthetic.main.add_bank_account_dialog.view.*
+import kotlinx.android.synthetic.main.bank_account_layout.view.*
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
 
 
@@ -220,11 +223,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val rootView: View
             if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 0) {
                 rootView = inflater!!.inflate(R.layout.dashboard_fragment, container, false)
-            } else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
+            }
+            else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
                 rootView = inflater!!.inflate(R.layout.transactions_fragment, container, false)
-            } else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 2) {
+            }
+            else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 2) {
                 rootView = inflater!!.inflate(R.layout.accounts_fragment, container, false)
-            } else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 3) {
+                var array = (activity as MainActivity).databaseManager.getBankAccounts()
+                rootView.bank_account_list.adapter = BankAccountAdapter(activity, array)
+            }
+            else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 3) {
                 rootView = inflater!!.inflate(R.layout.tags_fragment, container, false)
                 var v = (activity as MainActivity).databaseManager.getCategories()
                 val root = TreeNode.root().setViewHolder(TreeViewHolder(activity))
@@ -269,7 +277,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
 
-            } else {
+            }
+            else {
                 rootView = inflater!!.inflate(R.layout.profile_fragment, container, false)
             }
             return rootView

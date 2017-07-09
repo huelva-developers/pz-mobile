@@ -107,6 +107,16 @@ class DataBaseManager(context: Context) {
         cv.put("currency", account.currency)
 
         db!!.insert("bank_account",null,cv)
-        //Log.v("Categoria insertada", account.toString())
+    }
+
+    fun getBankAccounts(): ArrayList<BankAccount> {
+        val query = "select * from bank_account"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<BankAccount>()
+        while (cursor.moveToNext()) {
+            val account= BankAccount(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4))
+            v.add(account)
+        }
+        return v
     }
 }
