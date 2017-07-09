@@ -12,4 +12,12 @@
         <item>@drawable/shopping_cart</item>
         <item>@drawable/wrench</item>
     </integer-array>
+    <integer-array name="account_color">
+        <item>@color/colorDarkBlue</item>
+        <item>@color/colorDarkGreen</item>
+        <item>@color/colorDarkOrange</item>
+        <item>@color/colorDarkPurple</item>
+        <item>@color/colorDarkRed</item>
+        <item>@color/colorDarkYellow</item>
+    </integer-array>
 </resources>

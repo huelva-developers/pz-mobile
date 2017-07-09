@@ -39,6 +39,7 @@ class BankAccountAdapter(context : Activity, val accounts : ArrayList<BankAccoun
             holder.nameTextView = view.bank_account_name as TextView
             holder.descriptionTextView = view.bank_account_description as TextView
             holder.balanceTextView = view.bank_account_balance as TextView
+            holder.colorImageView = view.bank_account_color as ImageView
             view.tag = holder
 
         } else {
@@ -50,6 +51,7 @@ class BankAccountAdapter(context : Activity, val accounts : ArrayList<BankAccoun
         holder.nameTextView!!.text = account.name
         holder.descriptionTextView!!.text = account.description
         holder.balanceTextView!!.text = account.balance.toString()+account.currency
+        holder.colorImageView!!.setImageResource(context.resources.obtainTypedArray(R.array.account_color).getResourceId(account.color, -1))
         if(account.balance >= 0)
             holder.balanceTextView!!.setTextColor(context.resources.getColor(R.color.colorPositiveBalance))
         else
@@ -115,5 +117,6 @@ class BankAccountAdapter(context : Activity, val accounts : ArrayList<BankAccoun
         var nameTextView: TextView? = null
         var descriptionTextView: TextView? = null
         var balanceTextView: TextView? = null
+        var colorImageView : ImageView? = null
     }
 }

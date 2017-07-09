@@ -21,21 +21,25 @@ class DbHelper(context: Context)
 
         db.execSQL("CREATE TABLE bank_account (id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
                 "name VARCHAR NOT NULL ,description VARCHAR NOT NULL ,balance FLOAT NOT NULL ,"+
-                "currency VARCHAR NOT NULL ,created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
+                "currency VARCHAR NOT NULL , color INT NOT NULL, "+
+                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
                 "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
     }
 
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if(oldVersion==1)
+        if(oldVersion == 2)
+            db.execSQL("DROP TABLE bank_account")
+        if(oldVersion==1 || oldVersion==2)
             db.execSQL("CREATE TABLE bank_account (id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
                     "name VARCHAR NOT NULL ,description VARCHAR NOT NULL ,balance FLOAT NOT NULL ,"+
-                    "currency VARCHAR NOT NULL ,created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
+                    "currency VARCHAR NOT NULL , color INT NOT NULL, "+
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
                     "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
     }
 
     companion object {
         private val DB_NAME = "pz.sqlite"
-        private val DB_SHEME_VERSION = 2
+        private val DB_SHEME_VERSION = 3
     }
 }

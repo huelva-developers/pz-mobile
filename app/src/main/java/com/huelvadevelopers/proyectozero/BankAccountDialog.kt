@@ -26,6 +26,7 @@ class BankAccountDialog(context : Context) : Builder( context ){
     lateinit var edtDescription : EditText
     lateinit var edtBalance : EditText
     lateinit var spinner : Spinner
+    lateinit var gridView : GridView
     var currentAccount : BankAccount? = null // Solo se usa para editar cuentas
 
 
@@ -42,12 +43,17 @@ class BankAccountDialog(context : Context) : Builder( context ){
         //Balance EditText
         edtBalance = dialogView.add_bank_account_balance as EditText
 
-        //Parent Spinner
+        //Currency Spinner
         spinner = dialogView.add_bank_account_currency as Spinner
-
         var array = arrayOf( "\u20AC" , "\u00A3" , "\u0024" )
         val adapter : ArrayAdapter<String> = ArrayAdapter(mContex, android.R.layout.simple_spinner_item, array)
         spinner.adapter = adapter
+
+        //Color GridView
+        gridView = dialogView.findViewById(R.id.add_bank_account_color) as GridView
+        gridView.adapter = ImageAdapter(mContex, 2)
+        //Por defecto el color será el 0
+        (gridView.adapter as ImageAdapter).selectionId=0
 
         setTitle("New Bank Account")
         setPositiveButton("Done") { dialog, whichButton ->

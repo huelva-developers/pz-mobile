@@ -13,10 +13,23 @@ import android.widget.*
  * Created by DrAP on 02/07/2017.
  */
 
-class ImageAdapter(private val mContext: Context) : BaseAdapter() {
+/**
+ * @param type si tipo == 1 los recursos son los iconos de las categorías,
+ *      si tipo == 2 son los colores de las cuentas.
+ */
+class ImageAdapter(private val mContext: Context, type : Int) : BaseAdapter() {
 
     //Icono seleccionado
     var selectionId = 0
+
+    // references to our images
+    val mThumbIds : TypedArray
+    init {
+        if(type==1)
+            mThumbIds = mContext.resources.obtainTypedArray(R.array.icons)
+        else
+            mThumbIds = mContext.resources.obtainTypedArray(R.array.account_color)
+    }
 
     override fun getCount(): Int {
         return mThumbIds.length()
@@ -55,7 +68,4 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
             imageView.setBackgroundColor(Color.TRANSPARENT)
         return imageView
     }
-
-    // references to our images
-    private val mThumbIds : TypedArray = mContext.resources.obtainTypedArray(R.array.icons)
 }

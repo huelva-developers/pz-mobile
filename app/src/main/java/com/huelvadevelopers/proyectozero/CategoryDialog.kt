@@ -52,7 +52,7 @@ class CategoryDialog(context : Context) : Builder( context ){
 
         //Icons GridView
         gridView = dialogView.findViewById(R.id.add_category_icon) as GridView
-        gridView.adapter = ImageAdapter(mContex)
+        gridView.adapter = ImageAdapter(mContex, 1)
         //Por defecto el icono será el 0
         (gridView.adapter as ImageAdapter).selectionId=0
 
