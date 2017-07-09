@@ -119,4 +119,9 @@ class DataBaseManager(context: Context) {
         }
         return v
     }
+
+    fun removeBankAccountById( id : Int) {
+        var query = "delete from bank_account where id = "+id
+        db!!.execSQL(query)
+    }
 }

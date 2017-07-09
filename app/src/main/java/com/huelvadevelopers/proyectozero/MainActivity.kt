@@ -231,6 +231,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 rootView = inflater!!.inflate(R.layout.accounts_fragment, container, false)
                 var array = (activity as MainActivity).databaseManager.getBankAccounts()
                 rootView.bank_account_list.adapter = BankAccountAdapter(activity, array)
+
+                rootView.remove_bank_account.setOnDragListener { v, event ->
+                    if(event.action==DragEvent.ACTION_DROP){
+                        val item = event.clipData.getItemAt(0)
+                        var dragData : String = item.text as String
+                        v.setBackgroundColor(resources.getColor(R.color.colorDarkRed))
+                        (activity as MainActivity).databaseManager.removeBankAccountById(dragData.toInt())
+                        (activity as MainActivity).goSection(2)
+                    }
+                    else if(event.action == DragEvent.ACTION_DRAG_ENTERED)
+                        v.setBackgroundColor(resources.getColor(R.color.colorDarkRed))
+                    else if(event.action == DragEvent.ACTION_DRAG_EXITED)
+                        v.setBackgroundColor(resources.getColor(R.color.colorLightRed))
+                    true
+                }
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 3) {
                 rootView = inflater!!.inflate(R.layout.tags_fragment, container, false)
