@@ -201,11 +201,11 @@ class TreeViewHolder(context: Context) : TreeNode.BaseNodeViewHolder<Category>(c
                 DragEvent.ACTION_DRAG_ENDED -> {
 
                     v.setBackgroundColor(android.R.color.background_light)
-                    val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
-                    val params = v.treeViewContainer.layoutParams
+                    val contentView = (context as Activity).window.decorView.findViewById(android.R.id.content)
+                    val params = contentView.treeViewContainer.layoutParams
                     (params as LinearLayout.LayoutParams).weight=100f
-                    v.treeViewContainer.layoutParams = params
-                    v.removeCategory.visibility=View.GONE
+                    contentView.treeViewContainer.layoutParams = params
+                    contentView.removeCategory.visibility=View.GONE
 
                     // Does a getResult(), and displays what happened.
                     if (event.getResult()) {
