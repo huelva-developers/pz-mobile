@@ -13,8 +13,7 @@ import com.huelvadevelopers.proyectozero.model.Transaction
 
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Vector
+import java.util.*
 
 /**
  * Created by DrAP on 23/6/2017.
@@ -70,6 +69,14 @@ class DataBaseManager(context: Context) {
         val v = getCategories()
         for (category : Category in v){
             if (category.name.equals(n))
+                return category
+        }
+        return null
+    }
+    fun getCategoryById(id : Int): Category? {
+        val v = getCategories()
+        for (category : Category in v){
+            if (category.id == id)
                 return category
         }
         return null
@@ -157,6 +164,14 @@ class DataBaseManager(context: Context) {
         }
         return null
     }
+    fun getBankAccountById(id : Int): BankAccount? {
+        val v = getBankAccounts()
+        for (account : BankAccount in v){
+            if (account.id == id)
+                return account
+        }
+        return null
+    }
 
     fun removeBankAccountById( id : Int) {
         var query = "delete from bank_account where id = "+id
@@ -174,6 +189,19 @@ class DataBaseManager(context: Context) {
         cv.put("amount", transaction.amount)
 
         db!!.insert("'transaction'",null,cv)
+    }
+    fun getTransactions(): ArrayList<Transaction> {
+        val query = "select * from 'transaction'"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<Transaction>()
+        while (cursor.moveToNext()) {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            var date : Date = dateFormat.parse(cursor.getString(4))
+            val transaction= Transaction(cursor.getInt(0), getBankAccountById(cursor.getInt(1))!!, getCategoryById(cursor.getInt(2))!!,
+                    cursor.getString(3), date, cursor.getDouble(5))
+            v.add(transaction)
+        }
+        return v
     }
 
 }

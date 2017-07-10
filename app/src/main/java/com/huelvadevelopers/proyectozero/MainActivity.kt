@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.accounts_fragment.view.*
 import kotlinx.android.synthetic.main.add_bank_account_dialog.view.*
 import kotlinx.android.synthetic.main.bank_account_layout.view.*
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
+import kotlinx.android.synthetic.main.transactions_fragment.view.*
 import java.util.*
 
 
@@ -267,6 +268,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
                 rootView = inflater!!.inflate(R.layout.transactions_fragment, container, false)
+                var array = (activity as MainActivity).databaseManager.getTransactions()
+                rootView.transaction_list.adapter = TransactionAdapter(activity, array)
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 2) {
                 rootView = inflater!!.inflate(R.layout.accounts_fragment, container, false)

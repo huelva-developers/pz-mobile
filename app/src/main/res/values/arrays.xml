@@ -20,4 +20,13 @@
         <item>@color/colorDarkRed</item>
         <item>@color/colorDarkYellow</item>
     </integer-array>
+
+    <integer-array name="account_color_light">
+        <item>@color/colorLightBlue</item>
+        <item>@color/colorLightGreen</item>
+        <item>@color/colorLightOrange</item>
+        <item>@color/colorLightPurple</item>
+        <item>@color/colorLightRed</item>
+        <item>@color/colorLightYellow</item>
+    </integer-array>
 </resources>

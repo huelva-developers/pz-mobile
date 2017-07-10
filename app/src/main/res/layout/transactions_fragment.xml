@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="100">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/transaction_container_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="100">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/transaction_list">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/menu_transactions" />
-    </RelativeLayout>
+        </ListView>
+    </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/remove_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:visibility="gone"
+        android:background="@color/colorLightRed"
+        android:src="@android:drawable/ic_menu_delete"/>
 </LinearLayout>
