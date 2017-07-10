@@ -24,6 +24,17 @@ class DbHelper(context: Context)
                 "currency VARCHAR NOT NULL , color INT NOT NULL, "+
                 "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
                 "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
+
+        db.execSQL("create table \"transaction\" ( id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                "bank_account INT NOT NULL, "+
+                "category INT NOT NULL, "+
+                "description VARCHAR NOT NULL, "+
+                "date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                "amount DOUBLE NOT NULL, "+
+                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                "FOREIGN KEY (bank_account) REFERENCES bank_account(id) ON DELETE CASCADE, "+
+                "FOREIGN KEY (category) REFERENCES category(id))")
     }
 
 
@@ -36,10 +47,21 @@ class DbHelper(context: Context)
                     "currency VARCHAR NOT NULL , color INT NOT NULL, "+
                     "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ,"+
                     "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )")
+        if(oldVersion<=3)
+            db.execSQL("create table \"transaction\" ( id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    "bank_account INT NOT NULL, "+
+                    "category INT NOT NULL, "+
+                    "description VARCHAR NOT NULL, "+
+                    "date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                    "amount DOUBLE NOT NULL, "+
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                    "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, "+
+                    "FOREIGN KEY (bank_account) REFERENCES bank_account(id) ON DELETE CASCADE, "+
+                    "FOREIGN KEY (category) REFERENCES category(id))")
     }
 
     companion object {
         private val DB_NAME = "pz.sqlite"
-        private val DB_SHEME_VERSION = 3
+        private val DB_SHEME_VERSION = 4
     }
 }
