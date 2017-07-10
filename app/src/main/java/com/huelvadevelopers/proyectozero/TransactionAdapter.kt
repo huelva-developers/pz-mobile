@@ -19,6 +19,7 @@ import android.widget.AbsListView
 import com.huelvadevelopers.proyectozero.model.Transaction
 import kotlinx.android.synthetic.main.add_transaction_dialog.view.*
 import kotlinx.android.synthetic.main.transaction_layout.view.*
+import kotlinx.android.synthetic.main.transactions_fragment.view.*
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.util.*
@@ -64,12 +65,65 @@ class TransactionAdapter(context : Activity, val transactions : ArrayList<Transa
         holder.dateTextView!!.text = DateFormat.getDateTimeInstance().format(transaction.date)
 
         if(transaction.amount >= 0)
-            holder.amountTextView!!.setTextColor(context.resources.getColor(R.color.colorPositiveBalance))
+            holder.amountTextView!!.setTextColor(context.resources.getColor(R.color.colorAccent))
         else
             holder.amountTextView!!.setTextColor(context.resources.getColor(R.color.colorNegativeBalance))
 
         view.setBackgroundColor(context.resources.getColor(
                 context.resources.obtainTypedArray(R.array.account_color_light).getResourceId(transaction.bankAccount.color, -1)))
+
+        view.setOnLongClickListener {
+            //Log.v("click", "long click en text")
+            val v = (context as Activity).window.decorView.findViewById(android.R.id.content)
+            val params = v.transaction_container_layout.layoutParams
+            (params as LinearLayout.LayoutParams).weight = 90f
+            v.transaction_container_layout.layoutParams = params
+            v.remove_transaction.visibility = View.VISIBLE
+            var item = ClipData.Item(transaction.id.toString())
+
+            // Create a new ClipData using the tag as a label, the plain text MIME type, and
+            // the already-created item. This will create a new ClipDescription object within the
+            // ClipData, and set its MIME type entry to "text/plain"
+            var dragData: ClipData = ClipData(transaction.description, Array(1, { ClipDescription.MIMETYPE_TEXT_PLAIN }), item)
+            //Añadimos el numero de subcategorías para despues aceptar el cambio de padre o no
+
+            // Instantiates the drag shadow builder.
+            var myShadow = CustomDragShadowBuilder(view)
+            view.layoutParams = AbsListView.LayoutParams(-1, 1)
+            view.visibility = View.GONE
+
+            // Starts the drag
+
+            it.startDrag(dragData, // the data to be dragged
+                    myShadow, // the drag shadow builder
+                    null, // no need to use local data
+                    0          // flags (not currently used, set to 0)
+            )
+            true
+        }
+        view.setOnDragListener { v, event ->
+            if(event.action==DragEvent.ACTION_DRAG_ENDED){
+                val contentView = (context as Activity).window.decorView.findViewById(android.R.id.content)
+                val params = contentView.transaction_container_layout.layoutParams
+                (params as LinearLayout.LayoutParams).weight=100f
+                contentView.transaction_container_layout.layoutParams = params
+                contentView.remove_transaction.visibility=View.GONE
+                (context as MainActivity).goSection(1)
+                // Does a getResult(), and displays what happened.
+                if (event.getResult()) {
+                    //Toast.makeText(context, "The drop was handled.", Toast.LENGTH_LONG).show()
+                    Log.v("drag",  "The drop was handled.")
+
+                } else {
+                    //Toast.makeText(context, "The drop didn't work.", Toast.LENGTH_LONG).show()
+                    Log.v("drag",  "The drop didn't work.")
+                }
+
+                // returns true; the value is ignored.
+                true
+            }
+            true
+        }
 
         return view
     }

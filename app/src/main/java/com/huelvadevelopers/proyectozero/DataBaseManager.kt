@@ -204,4 +204,9 @@ class DataBaseManager(context: Context) {
         return v
     }
 
+    fun removeTransactionById( id : Int) {
+        var query = "delete from 'transaction' where id = "+id
+        db!!.execSQL(query)
+    }
+
 }
