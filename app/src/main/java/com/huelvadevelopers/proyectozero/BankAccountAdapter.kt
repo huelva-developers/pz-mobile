@@ -50,13 +50,7 @@ class BankAccountAdapter(context : Activity, val accounts : ArrayList<BankAccoun
         val account = accounts[position]
         holder.nameTextView!!.text = account.name
         holder.descriptionTextView!!.text = account.description
-        val format : NumberFormat
-        if(account.currency.equals("\u20AC"))
-            format = NumberFormat.getInstance(Locale.GERMAN)
-        else if(account.currency.equals("\u00A3"))
-            format = NumberFormat.getInstance(Locale.UK)
-        else
-            format = NumberFormat.getInstance(Locale.US)
+        val format = NumberFormat.getInstance(context.resources.configuration.locale)
         val money = format.format(account.balance)
         holder.balanceTextView!!.text = money.toString() + account.currency
         holder.colorImageView!!.setImageResource(context.resources.obtainTypedArray(R.array.account_color).getResourceId(account.color, -1))
