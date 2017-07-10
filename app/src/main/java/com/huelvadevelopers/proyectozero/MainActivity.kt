@@ -30,10 +30,12 @@ import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import com.huelvadevelopers.proyectozero.model.BankAccount
+import com.huelvadevelopers.proyectozero.model.Transaction
 import kotlinx.android.synthetic.main.accounts_fragment.view.*
 import kotlinx.android.synthetic.main.add_bank_account_dialog.view.*
 import kotlinx.android.synthetic.main.bank_account_layout.view.*
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -115,6 +117,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         else if (id == R.id.nav_transactions) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_transactions)
             goSection(1)
+            fab!!.setOnClickListener {
+
+                val dialog = TransactionDialog(this)
+                dialog.currentTransaction = null
+                dialog.show()
+                dialog.mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    var dismiss = true
+                    val errorDialogBuilder = AlertDialog.Builder(this)
+                    errorDialogBuilder.setTitle("Error")
+                    if (dialog.edtDescription.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setTitle("Error")
+                        errorDialogBuilder.setMessage("Tienes que proporcionar una descripción.")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    } else if (dialog.edtAmount.text.toString().isEmpty()) {
+                        dismiss = false
+                        errorDialogBuilder.setTitle("Error")
+                        errorDialogBuilder.setMessage("Tienes que indicar la cantidad.")
+                        errorDialogBuilder.setPositiveButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+                            //pass
+                        }
+                        errorDialogBuilder.create().show()
+                        return@setOnClickListener
+                    }
+                    val transaction = Transaction(-1,
+                            databaseManager.getBankAccountByName(dialog.spnBankAccount.selectedItem.toString())!!,
+                            databaseManager.getCategoryByName(dialog.spnCategory.selectedItem.toString())!!,
+                            dialog.edtDescription.text.toString(), Date(dialog.tvDatetime.text.toString()),
+                            dialog.edtAmount.text.toString().toDouble())
+                    databaseManager.addTransaction(transaction)
+                    goSection(1)
+                    if (dismiss) dialog.mAlertDialog.dismiss()
+                }
+            }
         }
         else if (id == R.id.nav_accounts) {
             toolbar.title = projectAbbreviation + "/" + resources.getString(R.string.menu_accounts)

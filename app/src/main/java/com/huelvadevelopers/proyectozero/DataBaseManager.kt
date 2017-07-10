@@ -9,8 +9,10 @@ import android.os.Environment
 import android.util.Log
 import com.huelvadevelopers.proyectozero.model.BankAccount
 import com.huelvadevelopers.proyectozero.model.Category
+import com.huelvadevelopers.proyectozero.model.Transaction
 
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Vector
 
@@ -54,6 +56,23 @@ class DataBaseManager(context: Context) {
             v.add(category)
         }
         return v
+    }
+    fun getCategoriesName(): ArrayList<String> {
+        val query = "select name from category order by parent_id ASC"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<String>()
+        while (cursor.moveToNext()) {
+            v.add(cursor.getString(0))
+        }
+        return v
+    }
+    fun getCategoryByName(n : String): Category? {
+        val v = getCategories()
+        for (category : Category in v){
+            if (category.name.equals(n))
+                return category
+        }
+        return null
     }
 
     fun removeCategory( category : Category) {
@@ -121,10 +140,40 @@ class DataBaseManager(context: Context) {
         }
         return v
     }
+    fun getBankAccountsNames(): ArrayList<String> {
+        val query = "select name from bank_account"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<String>()
+        while (cursor.moveToNext()) {
+            v.add(cursor.getString(0))
+        }
+        return v
+    }
+    fun getBankAccountByName(n : String): BankAccount? {
+        val v = getBankAccounts()
+        for (account : BankAccount in v){
+            if (account.name.equals(n))
+                return account
+        }
+        return null
+    }
 
     fun removeBankAccountById( id : Int) {
         var query = "delete from bank_account where id = "+id
         db!!.execSQL(query)
+    }
+
+    fun addTransaction( transaction : Transaction) {
+        val cv = ContentValues()
+        cv.put("bank_account", transaction.bankAccount.id)
+        if(transaction.category != null)
+            cv.put("category", transaction.category.id)
+        cv.put("description", transaction.description)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        cv.put("date", dateFormat.format(transaction.date))
+        cv.put("amount", transaction.amount)
+
+        db!!.insert("'transaction'",null,cv)
     }
 
 }

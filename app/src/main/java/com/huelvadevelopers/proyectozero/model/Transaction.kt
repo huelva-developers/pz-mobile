@@ -7,4 +7,4 @@ import java.util.*
  */
 
 class Transaction(val id : Int, val bankAccount: BankAccount, var category: Category, var description : String,
-                  var date : Date, val amount : Int)
+                  var date : Date, val amount : Double)
