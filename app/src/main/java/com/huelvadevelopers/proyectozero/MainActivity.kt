@@ -23,6 +23,7 @@ import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.tags_fragment.view.*
 import android.content.DialogInterface
 import android.graphics.Color
+import android.support.v7.widget.LinearLayoutManager
 import android.widget.EditText
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.layout_icon_node.*
@@ -268,7 +269,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
                 rootView = inflater!!.inflate(R.layout.transactions_fragment, container, false)
-                var array = (activity as MainActivity).databaseManager.getTransactions()
+                var array = (activity as MainActivity).databaseManager.getTransactions().toTypedArray()
+
+                rootView.transaction_list.layoutManager = LinearLayoutManager(activity)
                 rootView.transaction_list.adapter = TransactionAdapter(activity, array)
 
                 rootView.remove_transaction.setOnDragListener { v, event ->
