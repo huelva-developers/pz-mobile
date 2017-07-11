@@ -291,7 +291,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 2) {
                 rootView = inflater!!.inflate(R.layout.accounts_fragment, container, false)
-                var array = (activity as MainActivity).databaseManager.getBankAccounts()
+                var array = (activity as MainActivity).databaseManager.getBankAccounts().toTypedArray()
+
+                rootView.bank_account_list.layoutManager = LinearLayoutManager(activity)
                 rootView.bank_account_list.adapter = BankAccountAdapter(activity, array)
 
                 rootView.remove_bank_account.setOnDragListener { v, event ->
