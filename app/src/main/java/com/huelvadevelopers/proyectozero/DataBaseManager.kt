@@ -191,7 +191,20 @@ class DataBaseManager(context: Context) {
         db!!.insert("'transaction'",null,cv)
     }
     fun getTransactions(): ArrayList<Transaction> {
-        val query = "select * from 'transaction'"
+        val query = "select * from 'transaction' order by date DESC"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<Transaction>()
+        while (cursor.moveToNext()) {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            var date : Date = dateFormat.parse(cursor.getString(4))
+            val transaction= Transaction(cursor.getInt(0), getBankAccountById(cursor.getInt(1))!!, getCategoryById(cursor.getInt(2))!!,
+                    cursor.getString(3), date, cursor.getDouble(5))
+            v.add(transaction)
+        }
+        return v
+    }
+    fun getTransactions(limit : Int): ArrayList<Transaction> {
+        val query = "select * from 'transaction' order by date DESC LIMIT $limit"
         val cursor = db!!.rawQuery(query, null)
         val v = ArrayList<Transaction>()
         while (cursor.moveToNext()) {
@@ -209,4 +222,23 @@ class DataBaseManager(context: Context) {
         db!!.execSQL(query)
     }
 
+    fun createRandomTransactions(){
+        var ran = Random(System.currentTimeMillis())
+        val accounts = getBankAccounts()
+        val categories = getCategories()
+        repeat(200) { i ->
+            var cal = Calendar.getInstance()
+            cal.set(Calendar.DAY_OF_MONTH, ran.nextInt(28))
+            cal.set(Calendar.YEAR, ran.nextInt(2)+2016)
+            cal.set(Calendar.MONTH, ran.nextInt(12))
+            cal.set(Calendar.HOUR_OF_DAY, ran.nextInt(24))
+            cal.set(Calendar.MINUTE, ran.nextInt(60))
+            cal.set(Calendar.SECOND, ran.nextInt(60))
+            var amount = ran.nextInt(1000)
+            if(ran.nextBoolean()) amount *= -1
+            val t = Transaction(1000+i, accounts[ran.nextInt(accounts.size)], categories[ran.nextInt(categories.size)],
+                    "Transacción random numero "+i, cal.time, amount.toDouble())
+            addTransaction(t)
+        }
+    }
 }

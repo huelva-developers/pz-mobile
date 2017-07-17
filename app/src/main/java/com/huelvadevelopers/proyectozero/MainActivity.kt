@@ -269,10 +269,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
                 rootView = inflater!!.inflate(R.layout.transactions_fragment, container, false)
-                var array = (activity as MainActivity).databaseManager.getTransactions().toTypedArray()
+                var array = (activity as MainActivity).databaseManager.getTransactions(25).toTypedArray()
 
-                rootView.transaction_list.layoutManager = LinearLayoutManager(activity)
+                val mLayoutManager = LinearLayoutManager(activity)
+                rootView.transaction_list.layoutManager = mLayoutManager
                 rootView.transaction_list.adapter = TransactionAdapter(activity, array)
+                val mScrollListener = object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                        val visibleItemCount = mLayoutManager.childCount
+                        val totalItemCount = mLayoutManager.itemCount
+                        val pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition()
+                        if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+                            array = (activity as MainActivity).databaseManager.getTransactions(mLayoutManager.itemCount + 25).toTypedArray()
+                            rootView.transaction_list.swapAdapter(TransactionAdapter(activity, array), false)
+                        }
+                    }
+                }
+                rootView.transaction_list.addOnScrollListener(mScrollListener)
 
                 rootView.remove_transaction.setOnDragListener { v, event ->
                     if(event.action==DragEvent.ACTION_DROP){
