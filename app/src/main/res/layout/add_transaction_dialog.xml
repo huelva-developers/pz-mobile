@@ -10,43 +10,65 @@
 
     <Spinner
         android:id="@+id/add_transaction_bank_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" />
 
     <Spinner
         android:id="@+id/add_transaction_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"/>
 
     <EditText
         android:inputType="text"
-        android:lines="2"
-        android:minLines="2"
-        android:gravity="top|left"
         android:maxLength="25"
-        android:maxLines="2"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:scrollbars="vertical"
+        android:layout_width="match_parent"
         android:id="@+id/add_transaction_description"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/tv_with_border_background"
+        android:padding="3dp"
         android:hint="Description" />
 
     <EditText
         android:id="@+id/add_transaction_amount"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/tv_with_border_background"
+        android:padding="3dp"
         android:hint="Amount"
         android:inputType="numberDecimal|numberSigned" />
-    <TextView
-        android:id="@+id/add_transaction_date"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/add_transaction_date"
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/tv_with_border_background"
+            android:padding="3dp"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/add_transaction_time"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tv_with_border_background"
+            android:padding="3dp"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
 
 
 </LinearLayout>

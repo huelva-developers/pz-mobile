@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.add_bank_account_dialog.view.*
 import kotlinx.android.synthetic.main.bank_account_layout.view.*
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
 import kotlinx.android.synthetic.main.transactions_fragment.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -147,10 +148,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         errorDialogBuilder.create().show()
                         return@setOnClickListener
                     }
+                    var date = Date(dialog.tvDate.text.toString()+" "+dialog.tvTime.text.toString())
                     val transaction = Transaction(-1,
                             databaseManager.getBankAccountByName(dialog.spnBankAccount.selectedItem.toString())!!,
                             databaseManager.getCategoryByName(dialog.spnCategory.selectedItem.toString())!!,
-                            dialog.edtDescription.text.toString(), Date(dialog.tvDatetime.text.toString()),
+                            dialog.edtDescription.text.toString(), date,
                             dialog.edtAmount.text.toString().toDouble())
                     databaseManager.addTransaction(transaction)
                     goSection(1)
