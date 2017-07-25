@@ -24,21 +24,32 @@ import kotlinx.android.synthetic.main.tags_fragment.view.*
 import android.content.DialogInterface
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.widget.EditText
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.layout_icon_node.*
 import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.huelvadevelopers.proyectozero.model.BankAccount
 import com.huelvadevelopers.proyectozero.model.Transaction
 import kotlinx.android.synthetic.main.accounts_fragment.view.*
 import kotlinx.android.synthetic.main.add_bank_account_dialog.view.*
 import kotlinx.android.synthetic.main.bank_account_layout.view.*
+import kotlinx.android.synthetic.main.dashboard_fragment.view.*
 import kotlinx.android.synthetic.main.layout_icon_node.view.*
 import kotlinx.android.synthetic.main.transactions_fragment.view.*
+import java.nio.CharBuffer
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -268,6 +279,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val rootView: View
             if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 0) {
                 rootView = inflater!!.inflate(R.layout.dashboard_fragment, container, false)
+
+                //var chart = rootView.chart
+                var chart = ChartBuilder.getInstance(activity)
+
+                var layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                chart.layoutParams = layoutParams
+                rootView.chart.addView(chart)
+
+
+
             }
             else if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 1) {
                 rootView = inflater!!.inflate(R.layout.transactions_fragment, container, false)

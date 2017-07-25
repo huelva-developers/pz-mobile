@@ -14,6 +14,7 @@ import com.huelvadevelopers.proyectozero.model.Transaction
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by DrAP on 23/6/2017.
@@ -45,7 +46,6 @@ class DataBaseManager(context: Context) {
             val category= Category(cursor.getInt(0), cursor.getString(2), cursor.getInt(3), cursor.getInt(4))
             val parentId =  if (cursor.isNull(1)) -1 else cursor.getInt(1)
             if(parentId != -1)
-                Log.v("parentId", "Id: "+category.id+", parent: $parentId")
                 for(c: Category in v){
                     if(c.id == parentId) {
                         c.addChild(category)
@@ -240,5 +240,42 @@ class DataBaseManager(context: Context) {
                     "Transacción random numero "+i, cal.time, amount.toDouble())
             addTransaction(t)
         }
+    }
+
+    fun getEarningsAndExpenses() : ArrayList<ArrayList<Any> >{
+        val query = "select sum(case when amount > 0 then amount else 0 end) as ingresos,"+
+            "sum(case when amount < 0 then amount else 0 end) * (-1) as gastos,"+
+            "date from 'transaction' group by strftime('%m', date), strftime('%Y', date) order by date desc"
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<ArrayList<Any> >()
+        var cal : Calendar? = null
+        while (cursor.moveToNext()) {
+            val values = ArrayList<Any>()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            var date : Date = dateFormat.parse(cursor.getString(2))
+            val dateCal = Calendar.getInstance()
+            dateCal.time = date
+            if(cal == null)
+                cal = dateCal
+            var diffYear = dateCal.get(Calendar.YEAR) - cal!!.get(Calendar.YEAR)
+            var diffMonth = diffYear * 12 + dateCal.get(Calendar.MONTH) - cal.get(Calendar.MONTH)
+            Log.v("dif cal", dateFormat.format(dateCal.time)+", "+dateFormat.format(cal.time)+", "+diffMonth.toString())
+            while(diffMonth!=0){
+                val emptyValues = ArrayList<Any>()
+                emptyValues.add(0f)
+                emptyValues.add(0f)
+                emptyValues.add("" + SimpleDateFormat("MMM, yyyy").format(cal.time))
+                v.add(emptyValues)
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
+                diffYear = dateCal.get(Calendar.YEAR) - cal!!.get(Calendar.YEAR)
+                diffMonth = diffYear * 12 + dateCal.get(Calendar.MONTH) - cal.get(Calendar.MONTH)
+            }
+            values.add(cursor.getFloat(0))
+            values.add(cursor.getFloat(1))
+            values.add("" + SimpleDateFormat("MMM, yyyy").format(dateCal.time))
+            v.add(values)
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
+        }
+        return v
     }
 }
