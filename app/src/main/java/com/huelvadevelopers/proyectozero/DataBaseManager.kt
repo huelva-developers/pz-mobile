@@ -237,7 +237,7 @@ class DataBaseManager(context: Context) {
             var amount = ran.nextInt(1000)
             if(ran.nextBoolean()) amount *= -1
             val t = Transaction(1000+i, accounts[ran.nextInt(accounts.size)], categories[ran.nextInt(categories.size)],
-                    "Transacción random numero "+i, cal.time, amount.toDouble())
+                    "Transacción random "+i, cal.time, amount.toDouble())
             addTransaction(t)
         }
     }
@@ -275,6 +275,49 @@ class DataBaseManager(context: Context) {
             values.add("" + SimpleDateFormat("MMM, yyyy").format(dateCal.time))
             v.add(values)
             cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
+        }
+        return v
+    }
+    fun getEarningsAndExpensesWithTag(parentName : String?) : ArrayList<ArrayList<Any> >{
+        //Por cantidad
+        /*val query = "select sum(case when amount > 0 then amount else 0 end) as ingresos, "+
+                "sum(case when amount < 0 then amount else 0 end) * (-1) as gastos, c.name from 'transaction' t "+
+                "inner join 'category' c on t.category=c.id group by category"*/
+
+        //Por porcentaje
+        /*val query = "select sum(case when amount > 0 then amount else 0 end)/" +
+                "(select sum(case when amount > 0 then amount else 0 end) from 'transaction')*100 as ingresos" +
+                ", (sum(case when amount < 0 then amount else 0 end) * (-1))/(select sum(case when amount < 0 then amount " +
+                "else 0 end)*(-1) from 'transaction')*100  as gastos, c.name from 'transaction' t inner join 'category' c " +
+                "on t.category=c.id group by category"*/
+
+        //Categorias + subcategorias por cantidad
+        val query : String
+        if(parentName==null) {
+            query = "select sum(case when amount > 0 then amount else 0 end) as earnings, " +
+                    "sum(case when amount < 0 then amount else 0 end) * (-1) as expenses, " +
+                    "case when c.parent_id is null then c.name else (select name from category where id=c.parent_id) end as name " +
+                    "from 'transaction' t  inner join 'category' c on t.category=c.id " +
+                    "group by case when c.parent_id is null then c.id else c.parent_id end " +
+                    "order by coalesce(c.parent_id, c.id), c.id asc"
+        }
+        else {
+            query = "select sum(case when amount > 0 then amount else 0 end) as earnings, " +
+                    "sum(case when amount < 0 then amount else 0 end) * (-1) as expenses, " +
+                    "case when c.parent_id is not null and  (select name from category where id=c.parent_id) <> '$parentName' " +
+                    "then (select name from category where id=c.parent_id) else c.name end as name " +
+                    "from 'transaction' t  inner join 'category' c on t.category=c.id " +
+                    "group by case when c.parent_id is not null and (select name from category where id=c.parent_id)<>'$parentName' " +
+                    "then c.parent_id else c.id end order by coalesce(c.parent_id, c.id), c.id asc"
+        }
+        val cursor = db!!.rawQuery(query, null)
+        val v = ArrayList<ArrayList<Any> >()
+        while (cursor.moveToNext()) {
+            val values = ArrayList<Any>()
+            values.add(cursor.getFloat(0))
+            values.add(cursor.getFloat(1))
+            values.add(cursor.getString(2))
+            v.add(values)
         }
         return v
     }

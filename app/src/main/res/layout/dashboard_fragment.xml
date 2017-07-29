@@ -4,33 +4,55 @@
     android:layout_height="match_parent"
     android:id="@+id/chart_layout">
 
-    <LinearLayout
-        android:id="@+id/chart"
-        android:orientation="horizontal"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/chart2"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+            <LinearLayout
+                android:id="@+id/chart"
+                android:layout_margin="@dimen/chart_margin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                android:orientation="horizontal">
 
-    </LinearLayout>
-<!--
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
--->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chart2"
+                android:layout_margin="@dimen/chart_margin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chart3"
+                android:layout_margin="@dimen/chart_margin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    -->
 </LinearLayout>

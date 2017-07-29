@@ -280,13 +280,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (this.arguments.getInt(this.ARG_SECTION_NUMBER) == 0) {
                 rootView = inflater!!.inflate(R.layout.dashboard_fragment, container, false)
 
-                //var chart = rootView.chart
-                var chart = ChartBuilder.getInstance(activity)
+                if((activity as MainActivity).databaseManager.getTransactions().size>0) {
+                    //var chart = rootView.chart
+                    var chart = ChartBuilder.getInstance(activity)
 
-                var layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                chart.layoutParams = layoutParams
-                rootView.chart.addView(chart)
+                    var layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    chart.layoutParams = layoutParams
+                    rootView.chart.addView(chart)
 
+                    //PieChart de ingresos
+                    var pieChart = ChartBuilder.getPieInstance(activity, 0)
+
+                    var PieLayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    pieChart.layoutParams = PieLayoutParams
+                    rootView.chart2.addView(pieChart)
+
+                    //PieChart de gastos
+                    var pieChartExpenses = ChartBuilder.getPieInstance(activity, 1)
+
+                    var PieExpensesLayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    pieChartExpenses.layoutParams = PieExpensesLayoutParams
+                    rootView.chart3.addView(pieChartExpenses)
+                }
 
 
             }
