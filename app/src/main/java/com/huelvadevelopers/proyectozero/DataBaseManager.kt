@@ -179,16 +179,28 @@ class DataBaseManager(context: Context) {
     }
 
     fun addTransaction( transaction : Transaction) {
-        val cv = ContentValues()
-        cv.put("bank_account", transaction.bankAccount.id)
-        if(transaction.category != null)
-            cv.put("category", transaction.category.id)
-        cv.put("description", transaction.description)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        cv.put("date", dateFormat.format(transaction.date))
-        cv.put("amount", transaction.amount)
+        db.beginTransaction()
+        try {
+            val amount = transaction.amount
+            val bankAccountId = transaction.bankAccount.id
+            var cv = ContentValues()
+            cv.put("bank_account", bankAccountId)
+            if (transaction.category != null)
+                cv.put("category", transaction.category.id)
+            cv.put("description", transaction.description)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            cv.put("date", dateFormat.format(transaction.date))
+            cv.put("amount", transaction.amount)
 
-        db!!.insert("'transaction'",null,cv)
+            db.insert("'transaction'", null, cv)
+
+            db.execSQL("UPDATE bank_account SET balance = balance + $amount WHERE id = $bankAccountId")
+
+            db.setTransactionSuccessful()
+        }
+        finally {
+            db.endTransaction()
+        }
     }
     fun getTransactions(): ArrayList<Transaction> {
         val query = "select * from 'transaction' order by date DESC"
@@ -216,10 +228,34 @@ class DataBaseManager(context: Context) {
         }
         return v
     }
+    fun getTransactionById(id : Int): Transaction? {
+        val query = "select * from 'transaction' where id = $id"
+        val cursor = db!!.rawQuery(query, null)
+        if (cursor.moveToNext()) {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            var date : Date = dateFormat.parse(cursor.getString(4))
+            val transaction= Transaction(cursor.getInt(0), getBankAccountById(cursor.getInt(1))!!, getCategoryById(cursor.getInt(2))!!,
+                    cursor.getString(3), date, cursor.getDouble(5))
+            return transaction
+        }
+        else
+            return null
+    }
 
     fun removeTransactionById( id : Int) {
-        var query = "delete from 'transaction' where id = "+id
-        db!!.execSQL(query)
+        db.beginTransaction()
+        try {
+            val transaction = getTransactionById(id)
+            val amount = transaction!!.amount
+            val bankAccountId = transaction.bankAccount.id
+            var query = "delete from 'transaction' where id = " + id
+            db!!.execSQL(query)
+            db.execSQL("UPDATE bank_account SET balance = balance - $amount WHERE id = $bankAccountId")
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+
     }
 
     fun createRandomTransactions(){
