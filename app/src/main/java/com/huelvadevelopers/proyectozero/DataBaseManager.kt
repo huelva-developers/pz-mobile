@@ -312,6 +312,14 @@ class DataBaseManager(context: Context) {
             v.add(values)
             cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
         }
+        //Si solo tenemos transacciones en un mes, añadimos uno anterior vacío
+        if(v.size==1){
+            val emptyValues = ArrayList<Any>()
+            emptyValues.add(0f)
+            emptyValues.add(0f)
+            emptyValues.add("" + SimpleDateFormat("MMM, yyyy").format(cal!!.time))
+            v.add(emptyValues)
+        }
         return v
     }
     fun getEarningsAndExpensesWithTag(parentName : String?) : ArrayList<ArrayList<Any> >{

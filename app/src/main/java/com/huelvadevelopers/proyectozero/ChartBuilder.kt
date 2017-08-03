@@ -68,7 +68,7 @@ class ChartBuilder {
             chart.invalidate() // refresh
 
             var yAxis = chart.axisLeft
-            yAxis.granularity = 2000f
+            //yAxis.granularity = 2000f
             chart.axisRight.isEnabled=false
 
             var xAxis = chart.xAxis
@@ -76,7 +76,10 @@ class ChartBuilder {
             xAxis.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setValueFormatter { value, axis ->
-                xLabel[value.toInt()]
+                if(value>=0 && value<xLabel.size)
+                    xLabel[value.toInt()]
+                else
+                    ""
             }
 
             chart.setVisibleXRangeMaximum(5f)
